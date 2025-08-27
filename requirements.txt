@@ -1,0 +1,9 @@
+pandas
+numpy
+scipy
+yfinance
+mysql-connector-python
+matplotlib
+pandas_market_calendars
+sqlalchemy
+flask

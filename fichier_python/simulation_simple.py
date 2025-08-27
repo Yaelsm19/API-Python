@@ -15,7 +15,7 @@ from flask import Flask, request, jsonify
 #################################################################################################################################################################################
 #################################################################################################################################################################################
 
-def charger_donnees(symboles):
+def charger_donnees4(symboles):
     donnees = {}
     for symbole in symboles:
         chemin = f"../fichier_python/historique_action/{symbole}_cloture.csv"
@@ -35,12 +35,12 @@ def charger_donnees(symboles):
 #################################################################################################################################################################################
 #################################################################################################################################################################################
 
-def est_jour_boursier(date):
+def est_jour_boursier4(date):
     cal = mcal.get_calendar('XPAR')
     return cal.valid_days(start_date=date, end_date=date).size > 0
 
 
-def verifier_presence_date(symboles, date_str, donnees_symboles):
+def verifier_presence_date4(symboles, date_str, donnees_symboles):
     date = pd.to_datetime(date_str)
     for symbole in symboles:
         if symbole not in donnees_symboles:
@@ -59,7 +59,7 @@ def verifier_presence_date(symboles, date_str, donnees_symboles):
 #################################################################################################################################################################################
 #################################################################################################################################################################################
 
-def get_prix_cloture(symbole, date_str, donnees_symboles):
+def get_prix_cloture4(symbole, date_str, donnees_symboles):
     try:
         df = donnees_symboles[symbole]
         date = pd.to_datetime(date_str)
@@ -78,19 +78,19 @@ def get_prix_cloture(symbole, date_str, donnees_symboles):
 #################################################################################################################################################################################
 #################################################################################################################################################################################
 
-def calculer_rentabilite_1_titre(symbole, start_date, end_date, donnees_symboles) :
-    prix_debut = get_prix_cloture(symbole, start_date, donnees_symboles)
-    prix_fin = get_prix_cloture(symbole, end_date, donnees_symboles)
+def calculer_rentabilite_1_titre4(symbole, start_date, end_date, donnees_symboles) :
+    prix_debut = get_prix_cloture4(symbole, start_date, donnees_symboles)
+    prix_fin = get_prix_cloture4(symbole, end_date, donnees_symboles)
     if prix_debut==None or prix_fin==None :
         return 0
     rentabilite = (prix_fin-prix_debut)/prix_debut
     return rentabilite
 
 
-def calculer_rentabilite_n_titres(poids, symboles, start_date, end_date, donnees_symboles) :
+def calculer_rentabilite_n_titres4(poids, symboles, start_date, end_date, donnees_symboles) :
     rentabilite_total = 0
     for i in range(len(symboles)) :
-        rentabilite_total += poids[i] * calculer_rentabilite_1_titre(symboles[i], start_date, end_date, donnees_symboles)
+        rentabilite_total += poids[i] * calculer_rentabilite_1_titre4(symboles[i], start_date, end_date, donnees_symboles)
     return rentabilite_total
 
 #################################################################################################################################################################################
@@ -99,9 +99,9 @@ def calculer_rentabilite_n_titres(poids, symboles, start_date, end_date, donnees
 #################################################################################################################################################################################
 #################################################################################################################################################################################
 
-def simuler_rendement(start_date, end_date, montant, poids_symboles, symboles, poids_risque, taux_sans_risque, indice, user_id, nom_simulation):
+def simuler_rendement4(start_date, end_date, montant, poids_symboles, symboles, poids_risque, taux_sans_risque, indice, user_id, nom_simulation):
     titres = [indice] + symboles
-    donnees_titres = charger_donnees(titres)
+    donnees_titres = charger_donnees4(titres)
 
     montant_risque = montant * poids_risque
     montant_sans_risque = montant * (1 - poids_risque)
@@ -120,23 +120,23 @@ def simuler_rendement(start_date, end_date, montant, poids_symboles, symboles, p
 
     valeur_actuelle_indice = montant
 
-    while not verifier_presence_date(symboles, ancienne_date, donnees_titres):
+    while not verifier_presence_date4(symboles, ancienne_date, donnees_titres):
         ancienne_date += pd.Timedelta(days=1)
         date_actuelle = ancienne_date + pd.Timedelta(days=1)
 
     while date_actuelle <= date_fin:
-        if est_jour_boursier(date_actuelle) and verifier_presence_date(symboles, date_actuelle, donnees_titres):
+        if est_jour_boursier4(date_actuelle) and verifier_presence_date4(symboles, date_actuelle, donnees_titres):
             valeur_portefeuille[ancienne_date] = sum(valeurs_titres.values()) + valeur_tresorerie
             valeur_indice[ancienne_date] = valeur_actuelle_indice
 
             for symbole in symboles:
-                rendement = calculer_rentabilite_1_titre(symbole, ancienne_date, date_actuelle, donnees_titres)
+                rendement = calculer_rentabilite_1_titre4(symbole, ancienne_date, date_actuelle, donnees_titres)
                 valeurs_titres[symbole] *= (1 + rendement)
 
             nb_jours = (date_actuelle - ancienne_date).days
             valeur_tresorerie *= (1 + taux_sans_risque) ** (nb_jours/365)
 
-            rendement_indice = calculer_rentabilite_1_titre(indice, ancienne_date, date_actuelle, donnees_titres)
+            rendement_indice = calculer_rentabilite_1_titre4(indice, ancienne_date, date_actuelle, donnees_titres)
             valeur_actuelle_indice *= (1 + rendement_indice)
 
             ancienne_date = date_actuelle
@@ -214,35 +214,3 @@ def simuler_rendement(start_date, end_date, montant, poids_symboles, symboles, p
 ######################################################### Traitement des arguments ##############################################################################################
 #################################################################################################################################################################################
 #################################################################################################################################################################################
-
-app = Flask(__name__)
-
-@app.route("/simuler_rendement", methods=["GET"])
-def simuler_rendement_api():
-    try:
-        date_debut = datetime.strptime(request.args.get("date_debut"), "%Y-%m-%d")
-        date_fin = datetime.strptime(request.args.get("date_fin"), "%Y-%m-%d")
-        w = request.args.get("w")
-        titres = request.args.get("titres").split(',')
-        poids_str = float(request.args.get("poids_str"))
-        indice = request.args.get("indice")
-        user_id = request.args.get("user_id")
-        montant = float(request.args.get("montant", 1000))
-        if montant <= 0:
-            return jsonify({"error": "Montant doit être positif."}), 400
-        taux_sans_risque = float(request.args.get("taux_sans_risque", 0.000092))
-        nom_simulation = request.args.get("nom_simulation")
-
-        w_liste = [float(p.strip())/100 for p in w.split(',')]
-
-        reponse = simuler_rendement(date_debut, date_fin, montant, w_liste, titres, poids_str, taux_sans_risque, indice, user_id, nom_simulation)
-
-    except Exception as e:
-        return jsonify({"error": f"Paramètres invalides ou erreur: {str(e)}"}), 400
-
-    return jsonify(reponse)
-
-
-if __name__ == "__main__":
-    app.run(host="0.0.0.0", port=8000, debug=True)
-

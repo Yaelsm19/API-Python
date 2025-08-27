@@ -16,7 +16,7 @@ from flask import Flask, request, jsonify
 ######################################################################## Tout recuperer #########################################################################################
 #################################################################################################################################################################################
 #################################################################################################################################################################################
-def recuperer_prix_cloture(start_date, end_date, json_file):
+def recuperer_prix_cloture2(start_date, end_date, json_file):
     with open(json_file, 'r', encoding='utf-8') as f:
         actions = json.load(f)
 
@@ -67,7 +67,7 @@ def recuperer_prix_cloture(start_date, end_date, json_file):
 
 
 
-def verifier_et_supprimer_fichiers_tout(date_debut, date_actuelle):
+def verifier_et_supprimer_fichiers_tout2(date_debut, date_actuelle):
     dossier = "../fichier_python/historique_action"
     date_min_ref = pd.to_datetime(date_debut) + timedelta(days=10)
     date_max_ref = pd.to_datetime(date_actuelle) - timedelta(days=10)
@@ -103,7 +103,7 @@ def verifier_et_supprimer_fichiers_tout(date_debut, date_actuelle):
             supprimes += 1
 
 
-def filtrer_json_selon_csv(json_file, dossier_csv):
+def filtrer_json_selon_csv2(json_file, dossier_csv):
     with open(json_file, 'r', encoding='utf-8') as f:
         actions = json.load(f)
 
@@ -168,7 +168,7 @@ def init_database() -> None:
         cursor.close()
         conn.close()
 
-def enrichir_et_json_vers_sql(json_file: str, max_retries: int = 3, delay: float = 0.1) -> None:
+def enrichir_et_json_vers_sql2(json_file: str, max_retries: int = 3, delay: float = 0.1) -> None:
     """Charge les actions depuis JSON et les insère directement dans MySQL."""
     try:
         with open(json_file, 'r', encoding='utf-8') as f:
@@ -238,18 +238,18 @@ def enrichir_et_json_vers_sql(json_file: str, max_retries: int = 3, delay: float
 
 
 
-def tout_faire(start_date, end_date, json_file, sql_file, dossier_actions) :
-    recuperer_prix_cloture(start_date, end_date, json_file)
-    verifier_et_supprimer_fichiers_tout(start_date, end_date)
-    filtrer_json_selon_csv(json_file, dossier_actions)
-    enrichir_et_json_vers_sql(json_file)
+def tout_faire2(start_date, end_date, json_file, sql_file, dossier_actions) :
+    recuperer_prix_cloture2(start_date, end_date, json_file)
+    verifier_et_supprimer_fichiers_tout2(start_date, end_date)
+    filtrer_json_selon_csv2(json_file, dossier_actions)
+    enrichir_et_json_vers_sql2(json_file)
 #################################################################################################################################################################################
 #################################################################################################################################################################################
 ######################################################################## Tout completer #########################################################################################
 #################################################################################################################################################################################
 #################################################################################################################################################################################
 
-def completer_prix_csv_aujourdhui(json_file):
+def completer_prix_csv_aujourdhui2(json_file):
     """Complète tous les CSV existants pour chaque action jusqu'à aujourd'hui."""
     with open(json_file, 'r', encoding='utf-8') as f:
         actions = json.load(f)
@@ -324,7 +324,7 @@ def completer_prix_csv_aujourdhui(json_file):
 #################################################################################################################################################################################
 #################################################################################################################################################################################
 
-def recuperer_prix_cloture_1_symbole(start_date: str, end_date: str, nom: str, symbole: str) -> Optional[str]:
+def recuperer_prix_cloture_1_symbole2(start_date: str, end_date: str, nom: str, symbole: str) -> Optional[str]:
     os.makedirs('../fichier_python/historique_action', exist_ok=True)
     nom_fichier = nom
     print(f"Telechargement des donnees pour {nom_fichier} ({symbole})...")
@@ -346,7 +346,7 @@ def recuperer_prix_cloture_1_symbole(start_date: str, end_date: str, nom: str, s
         print(f"NON : Erreur lors du telechargement pour {symbole} : {e}")
         return 0
 
-def verifier_et_supprimer_fichiers(nom_fichier: str, start_date: str, end_date: str) -> int:
+def verifier_et_supprimer_fichiers2(nom_fichier: str, start_date: str, end_date: str) -> int:
     date_min_ref = pd.to_datetime(start_date) + timedelta(days=10)
     date_max_ref = pd.to_datetime(end_date) - timedelta(days=10)
     fichier = f"../fichier_python/historique_action/{nom_fichier}_cloture.csv"
@@ -375,7 +375,7 @@ def verifier_et_supprimer_fichiers(nom_fichier: str, start_date: str, end_date: 
             os.remove(fichier)
         return 0
 
-def ajouter_symbole_json(nom: str, symbole: str, fichier_json: str) -> bool:
+def ajouter_symbole_json2(nom: str, symbole: str, fichier_json: str) -> bool:
     try:
         try:
             with open(fichier_json, 'r', encoding='utf-8') as f:
@@ -405,7 +405,7 @@ def ajouter_symbole_json(nom: str, symbole: str, fichier_json: str) -> bool:
         print(f"Erreur lors de l'ajout a {fichier_json} : {e}")
         return False
 
-def ajouter_action_base_donnees(nom: str, symbole: str) -> bool:
+def ajouter_action_base_donnees2(nom: str, symbole: str) -> bool:
 
     try:
 
@@ -439,58 +439,30 @@ def ajouter_action_base_donnees(nom: str, symbole: str) -> bool:
         cursor.close()
         conn.close()
 
-def ajouter_action_complete(nom: str, symbole: str, start_date: str, end_date: str, fichier_json: str = "../euronext_nettoye.json") -> bool:
+def ajouter_action_complete2(nom: str, symbole: str, start_date: str, end_date: str, fichier_json: str = "../euronext_nettoye.json") -> bool:
     try:
         init_database()
     except Exception as e:
         print(f"echec de l'initialisation de la base de donnees : {e}")
         return False
 
-    nom_fichier = recuperer_prix_cloture_1_symbole(start_date, end_date, nom, symbole)
+    nom_fichier = recuperer_prix_cloture_1_symbole2(start_date, end_date, nom, symbole)
     if not nom_fichier:
         print(f"echec du telechargement des donnees historiques pour {nom} ({symbole}).")
         return False
     
-    if not verifier_et_supprimer_fichiers(nom_fichier, start_date, end_date):
+    if not verifier_et_supprimer_fichiers2(nom_fichier, start_date, end_date):
         print(f"Le fichier CSV pour {nom} ({symbole}) ne respecte pas les critères de dates.")
         return False
     
-    if not ajouter_symbole_json(nom, symbole, fichier_json):
+    if not ajouter_symbole_json2(nom, symbole, fichier_json):
         print(f"echec de l'ajout de {nom} ({symbole}) au fichier JSON.")
         return False
 
-    if not ajouter_action_base_donnees(nom, symbole):
+    if not ajouter_action_base_donnees2(nom, symbole):
             print(f"echec de l'ajout de {nom} ({symbole}) a la base de donnees.")
             return False
     
     print(f"Action {nom} ({symbole}) ajoutee avec succès (JSON, base de donnees, donnees historiques).")
     return True
-
-
-app = Flask(__name__)
-
-@app.route("/recuperer_tout", methods=["GET"])
-def recuperer_tout():
-    date_debut = request.args.get("date_debut")
-    tz_paris = ZoneInfo("Europe/Paris")
-    date_actuelle = datetime.now(tz_paris).date()
-    tout_faire(date_debut, date_actuelle, "../euronext_nettoye.json", "sql_file", "../fichier_python/historique_action")
-    return jsonify({"message": "Récupération terminée", "date_debut": date_debut, "date_fin": str(date_actuelle)})
-
-@app.route("/recuperer_un", methods=["GET"])
-def recuperer_un():
-    date_debut = request.args.get("date_debut")
-    nom_titre = request.args.get("nom_titre")
-    symbole_titre = request.args.get("symbole_titre")
-    tz_paris = ZoneInfo("Europe/Paris")
-    date_actuelle = datetime.now(tz_paris).date()
-    ajouter_action_complete(nom_titre, symbole_titre, date_debut, date_actuelle)
-    return jsonify({"message": f"Action {nom_titre} ({symbole_titre}) ajoutée", "date_debut": date_debut, "date_fin": str(date_actuelle)})
-
-@app.route("/completer_tout", methods=["GET"])
-def completer_tout():
-    completer_prix_csv_aujourdhui("../euronext_nettoye.json")
-    return jsonify({"message": "Complétion terminée"})
-
-
 

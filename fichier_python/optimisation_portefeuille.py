@@ -12,7 +12,7 @@ from flask import Flask, request, jsonify
 #################################################################################################################################################################################
 #################################################################################################################################################################################
 
-def calculer_rentabilite(symbole, start_date, end_date):
+def calculer_rentabilite1(symbole, start_date, end_date):
     df = pd.read_csv(
         f"../fichier_python/historique_action/{symbole}_cloture.csv",
         encoding='utf-8',
@@ -31,10 +31,10 @@ def calculer_rentabilite(symbole, start_date, end_date):
     moyenne_rentabilite = df_periode['Rentabilite_Journaliere'].mean()
     return moyenne_rentabilite
 
-def calculer_matrice_rentabilite(symboles, start_date, end_date):
+def calculer_matrice_rentabilite1(symboles, start_date, end_date):
     rentabilites = []
     for s in symboles:
-        r = calculer_rentabilite(s, start_date, end_date)
+        r = calculer_rentabilite1(s, start_date, end_date)
         if r is None:
             print(f"Attention : rentabilité manquante pour {s}, valeur 0 par défaut")
             r = 0.0
@@ -47,7 +47,7 @@ def calculer_matrice_rentabilite(symboles, start_date, end_date):
 #################################################################################################################################################################################
 #################################################################################################################################################################################
 
-def calculer_covariance(symbole1, symbole2, start_date, end_date):
+def calculer_covariance1(symbole1, symbole2, start_date, end_date):
     df1 = pd.read_csv(
         f"../fichier_python/historique_action/{symbole1}_cloture.csv",
         encoding='utf-8',
@@ -87,22 +87,22 @@ def calculer_covariance(symbole1, symbole2, start_date, end_date):
     cov = s1.cov(s2)
     return float(cov) if np.isscalar(cov) and not np.isnan(cov) else 0.0
 
-def calculer_ecart_type(symbole, start_date, end_date):
-    return calculer_covariance(symbole, symbole, start_date, end_date) ** 0.5
+def calculer_ecart_type1(symbole, start_date, end_date):
+    return calculer_covariance1(symbole, symbole, start_date, end_date) ** 0.5
 
-def calculer_matrice_covariance(symboles, start_date, end_date):
+def calculer_matrice_covariance1(symboles, start_date, end_date):
     n = len(symboles)
     matrice_covariance = np.zeros((n, n))
     for i in range(n):
         for j in range(i, n):
-            cov = calculer_covariance(symboles[i], symboles[j], start_date, end_date)
+            cov = calculer_covariance1(symboles[i], symboles[j], start_date, end_date)
             matrice_covariance[i][j] = cov
             matrice_covariance[j][i] = cov
     return matrice_covariance
 
-def calculer_risque_portefeuille(w, symboles, start_date, end_date):
+def calculer_risque_portefeuille1(w, symboles, start_date, end_date):
     w_transpose = np.transpose(w)
-    matrice_covariance = calculer_matrice_covariance(symboles, start_date, end_date)
+    matrice_covariance = calculer_matrice_covariance1(symboles, start_date, end_date)
     variance_portefeuille = np.dot(np.dot(w_transpose, matrice_covariance), w)
     return variance_portefeuille**0.5
 
@@ -112,7 +112,7 @@ def calculer_risque_portefeuille(w, symboles, start_date, end_date):
 #################################################################################################################################################################################
 #################################################################################################################################################################################
 
-def calculer_co_semi_variance(symbole1, symbole2, start_date, end_date, taux_benchmark):
+def calculer_co_semi_variance1(symbole1, symbole2, start_date, end_date, taux_benchmark):
     taux_benchmark_journalier = (1+taux_benchmark)**(1/365)-1
     df1 = pd.read_csv(
         f"../fichier_python/historique_action/{symbole1}_cloture.csv",
@@ -171,19 +171,19 @@ def calculer_co_semi_variance(symbole1, symbole2, start_date, end_date, taux_ben
     return float(co_semi_var)
 
 
-def calculer_matrice_semi_variance(symboles, start_date, end_date, taux_benchmark):
+def calculer_matrice_semi_variance1(symboles, start_date, end_date, taux_benchmark):
     n = len(symboles)
     matrice_covariance = np.zeros((n, n))
     for i in range(n):
         for j in range(i, n):
-            cov = calculer_co_semi_variance(symboles[i], symboles[j], start_date, end_date, taux_benchmark)
+            cov = calculer_co_semi_variance1(symboles[i], symboles[j], start_date, end_date, taux_benchmark)
             matrice_covariance[i][j] = cov
             matrice_covariance[j][i] = cov
     return matrice_covariance
 
-def calculer_semi_risque_portefeuille(w, symboles, start_date, end_date, taux_benchmark):
+def calculer_semi_risque_portefeuille1(w, symboles, start_date, end_date, taux_benchmark):
     w_transpose = np.transpose(w)
-    matrice_covariance = calculer_matrice_semi_variance(symboles, start_date, end_date, taux_benchmark)
+    matrice_covariance = calculer_matrice_semi_variance1(symboles, start_date, end_date, taux_benchmark)
     variance_portefeuille = np.dot(np.dot(w_transpose, matrice_covariance), w)
     return variance_portefeuille**0.5
 
@@ -193,7 +193,7 @@ def calculer_semi_risque_portefeuille(w, symboles, start_date, end_date, taux_be
 #################################################################################################################################################################################
 #################################################################################################################################################################################
 
-def calculer_skewness_matrice(symboles, start_date, end_date):
+def calculer_skewness_matrice1(symboles, start_date, end_date):
     donnees = []
     for symbole in symboles:
         chemin = f"../fichier_python/historique_action/{symbole}_cloture.csv"
@@ -233,7 +233,7 @@ def calculer_skewness_matrice(symboles, start_date, end_date):
 #################################################################################################################################################################################
 #################################################################################################################################################################################
 
-def calculer_kurtosis_matrice(symboles, start_date, end_date):
+def calculer_kurtosis_matrice1(symboles, start_date, end_date):
     donnees = []
     for symbole in symboles:
         chemin = f"../fichier_python/historique_action/{symbole}_cloture.csv"
@@ -270,15 +270,15 @@ def calculer_kurtosis_matrice(symboles, start_date, end_date):
 #################################################################################################################################################################################
 #################################################################################################################################################################################
 
-def process_une_action(symbole, start_date, end_date):
-    rentabilite = calculer_rentabilite(symbole, start_date, end_date)
-    ecart_type = calculer_ecart_type(symbole, start_date, end_date)
+def process_une_action1(symbole, start_date, end_date):
+    rentabilite = calculer_rentabilite1(symbole, start_date, end_date)
+    ecart_type = calculer_ecart_type1(symbole, start_date, end_date)
     return (rentabilite, ecart_type)
 
-def process_tout_action(symboles, start_date, end_date):
+def process_tout_action1(symboles, start_date, end_date):
     data = []
     for symbole in symboles:
-        rentabilite, ecart_type = process_une_action(symbole, start_date, end_date)
+        rentabilite, ecart_type = process_une_action1(symbole, start_date, end_date)
         data.append({'Symbole': symbole, 'Rentabilite': f"{rentabilite:.6f}", 'Ecart_Type': f"{ecart_type:.4f}"})
     df_process = pd.DataFrame(data)
     return df_process
@@ -289,13 +289,13 @@ def process_tout_action(symboles, start_date, end_date):
 #################################################################################################################################################################################
 #################################################################################################################################################################################
 
-def maximiser_ratio_sharpe(symboles, start_date, end_date, taux_benchmark):
-    rendements = calculer_matrice_rentabilite(symboles, start_date, end_date).flatten()
-    covariance = calculer_matrice_covariance(symboles, start_date, end_date)
+def maximiser_ratio_sharpe1(symboles, start_date, end_date, taux_benchmark):
+    rendements = calculer_matrice_rentabilite1(symboles, start_date, end_date).flatten()
+    covariance = calculer_matrice_covariance1(symboles, start_date, end_date)
     n = len(rendements)
     taux_benchmark_journalier = (1+taux_benchmark)**(1/365)-1
 
-    def ratio_sharpe(w, taux_benchmark_journalier):
+    def ratio_sharpe1(w, taux_benchmark_journalier):
         rendement_portefeuille = np.dot(w, rendements)
         risque_portefeuille = np.sqrt(np.dot(w.T, np.dot(covariance, w)))
         return (rendement_portefeuille - taux_benchmark_journalier) / risque_portefeuille if risque_portefeuille != 0 else 0
@@ -310,7 +310,7 @@ def maximiser_ratio_sharpe(symboles, start_date, end_date, taux_benchmark):
     w0 = np.ones(n) / n
 
     resultat = minimize(
-        lambda w: -ratio_sharpe(w, taux_benchmark_journalier),
+        lambda w: -ratio_sharpe1(w, taux_benchmark_journalier),
         w0,
         method='SLSQP',
         bounds=bornes,
@@ -320,7 +320,7 @@ def maximiser_ratio_sharpe(symboles, start_date, end_date, taux_benchmark):
     if resultat.success:
         poids = resultat.x
         rendement_final = np.dot(poids, rendements)
-        risque_final = calculer_risque_portefeuille(poids, symboles, start_date, end_date)
+        risque_final = calculer_risque_portefeuille1(poids, symboles, start_date, end_date)
         data = []
         for i in range(len(symboles)):
             if poids[i] > 0.00001:
@@ -337,10 +337,10 @@ def maximiser_ratio_sharpe(symboles, start_date, end_date, taux_benchmark):
 #################################################################################################################################################################################
 #################################################################################################################################################################################
 
-def maximiser_ratio_sortino(symboles, start_date, end_date, taux_benchmark):
+def maximiser_ratio_sortino1(symboles, start_date, end_date, taux_benchmark):
     taux_benchmark_journalier = (1+taux_benchmark)**(1/365)-1
-    rendement_matrice = calculer_matrice_rentabilite(symboles, start_date, end_date)
-    covariance_matrice = calculer_matrice_semi_variance(symboles, start_date, end_date, taux_benchmark)
+    rendement_matrice = calculer_matrice_rentabilite1(symboles, start_date, end_date)
+    covariance_matrice = calculer_matrice_semi_variance1(symboles, start_date, end_date, taux_benchmark)
     n = len(rendement_matrice)
 
     def ratio_sortino(w):
@@ -348,7 +348,7 @@ def maximiser_ratio_sortino(symboles, start_date, end_date, taux_benchmark):
         risque = np.sqrt(np.dot(w.T, np.dot(covariance_matrice, w)))
         return (rendement - taux_benchmark_journalier) / risque
 
-    def gradient_ratio_sortino(w):
+    def gradient_ratio_sortino1(w):
         w = np.array(w)
         risque_carre = np.dot(w.T, np.dot(covariance_matrice, w))
         risque = np.sqrt(risque_carre)
@@ -373,13 +373,13 @@ def maximiser_ratio_sortino(symboles, start_date, end_date, taux_benchmark):
         method='SLSQP',
         bounds=bornes,
         constraints=contrainte_somme,
-        jac=gradient_ratio_sortino
+        jac=gradient_ratio_sortino1
     )
 
     if resultat.success:
         poids = resultat.x
         rendement_final = np.dot(poids, rendement_matrice)
-        risque_final = calculer_semi_risque_portefeuille(poids, symboles, start_date, end_date, taux_benchmark)
+        risque_final = calculer_semi_risque_portefeuille1(poids, symboles, start_date, end_date, taux_benchmark)
         data = []
         for i in range(len(symboles)):
             if poids[i] > 0.00001:
@@ -396,7 +396,7 @@ def maximiser_ratio_sortino(symboles, start_date, end_date, taux_benchmark):
 #################################################################################################################################################################################
 #################################################################################################################################################################################
 
-def gradient_utilite(w, lambd, matrice_rentabilite, matrice_covariance, matrice_skewness, matrice_kurtosis):
+def gradient_utilite1(w, lambd, matrice_rentabilite, matrice_covariance, matrice_skewness, matrice_kurtosis):
     n = len(w)
     E_w = np.dot(w.T, matrice_rentabilite)
     M_w = np.dot(np.dot(w.T, matrice_covariance), w)
@@ -414,7 +414,7 @@ def gradient_utilite(w, lambd, matrice_rentabilite, matrice_covariance, matrice_
     grad_U = np.exp(-lambd * E_w) * (term1 + grad_A)
     
     return grad_U
-def utilite_exponentielle(w, lambd, matrice_rentabilite, matrice_covariance, matrice_skewness, matrice_kurtosis):
+def utilite_exponentielle1(w, lambd, matrice_rentabilite, matrice_covariance, matrice_skewness, matrice_kurtosis):
     E_w = np.dot(w.T, matrice_rentabilite)
     M_w = np.dot(np.dot(w.T, matrice_covariance), w)
     S_w = np.einsum('i,j,k,ijk->', w, w, w, matrice_skewness)
@@ -425,21 +425,21 @@ def utilite_exponentielle(w, lambd, matrice_rentabilite, matrice_covariance, mat
     return -utilite
 
 
-def optimiser_utilite_CARA(symboles, start_date, end_date, lambd):
-    matrice_rentabilite = calculer_matrice_rentabilite(symboles, start_date, end_date).flatten()
-    matrice_covariance = calculer_matrice_covariance(symboles, start_date, end_date)
-    matrice_skewness = calculer_skewness_matrice(symboles, start_date, end_date)
-    matrice_kurtosis = calculer_kurtosis_matrice(symboles, start_date, end_date)
+def optimiser_utilite_CARA1(symboles, start_date, end_date, lambd):
+    matrice_rentabilite = calculer_matrice_rentabilite1(symboles, start_date, end_date).flatten()
+    matrice_covariance = calculer_matrice_covariance1(symboles, start_date, end_date)
+    matrice_skewness = calculer_skewness_matrice1(symboles, start_date, end_date)
+    matrice_kurtosis = calculer_kurtosis_matrice1(symboles, start_date, end_date)
     n = len(symboles)
     w0 = np.ones(n) / n
     contraintes = [{'type': 'eq', 'fun': lambda w: np.sum(w) - 1, 'jac': lambda w: np.ones_like(w)}]
     bornes = [(0, 1) for _ in range(n)]
 
     def objectif(w, lambd, matrice_rentabilite, matrice_covariance, matrice_skewness, matrice_kurtosis):
-        return utilite_exponentielle(w, lambd, matrice_rentabilite, matrice_covariance, matrice_skewness, matrice_kurtosis)
+        return utilite_exponentielle1(w, lambd, matrice_rentabilite, matrice_covariance, matrice_skewness, matrice_kurtosis)
 
     resultat = minimize(objectif, w0, method='SLSQP',
-                        jac=gradient_utilite,
+                        jac=gradient_utilite1,
                         args=(lambd, matrice_rentabilite, matrice_covariance, matrice_skewness, matrice_kurtosis),
                         bounds=bornes, constraints=contraintes,
                         options={'disp': False, 'maxiter': 1000})
@@ -447,7 +447,7 @@ def optimiser_utilite_CARA(symboles, start_date, end_date, lambd):
     if resultat.success:
         poids = resultat.x
         rendement_final = np.dot(poids, matrice_rentabilite)
-        risque_final = calculer_risque_portefeuille(poids, symboles, start_date, end_date)
+        risque_final = calculer_risque_portefeuille1(poids, symboles, start_date, end_date)
         data = []
         for i in range(n):
             if poids[i] > 0.00001:
@@ -463,53 +463,3 @@ def optimiser_utilite_CARA(symboles, start_date, end_date, lambd):
 ####################################################################### traitement des arguments ################################################################################
 #################################################################################################################################################################################
 #################################################################################################################################################################################
-
-
-
-app = Flask(__name__)
-
-@app.route("/optimiser", methods=["POST"])
-def optimiser():
-    try:
-        data = request.get_json()
-
-        titres = data.get("titres")
-        date_debut = datetime.strptime(data.get("date_debut"), "%Y-%m-%d")
-        date_fin = datetime.strptime(data.get("date_fin"), "%Y-%m-%d")
-        methode = data.get("methode")
-        taux_benchmark = float(data.get("taux_benchmark", 0.0))
-
-        if methode not in ['sharpe', 'moment_ordre_superieur', 'sortino']:
-            return jsonify({"erreur": "Méthode non reconnue."}), 400
-        
-        if methode == "sharpe":
-            df_optimisation, df_portefeuille = maximiser_ratio_sharpe(
-                titres, date_debut, date_fin, taux_benchmark
-            )
-        elif methode == "moment_ordre_superieur":
-            lamb = float(data.get("lambda"))
-            df_optimisation, df_portefeuille = optimiser_utilite_CARA(
-                titres, date_debut, date_fin, lamb
-            )
-        elif methode == "sortino":
-            df_optimisation, df_portefeuille = maximiser_ratio_sortino(
-                titres, date_debut, date_fin, taux_benchmark
-            )
-
-
-        df_process = process_tout_action(titres, date_debut, date_fin)
-
-        reponse = {
-            "optimisation": df_optimisation.to_dict(orient="records"),
-            "process": df_process.to_dict(orient="records"),
-            "portefeuille": df_portefeuille.to_dict(orient="records")
-        }
-
-        return jsonify(reponse)
-
-    except Exception as e:
-        return jsonify({"erreur": str(e)}), 500
-
-
-if __name__ == "__main__":
-    app.run(host="0.0.0.0", port=8080)

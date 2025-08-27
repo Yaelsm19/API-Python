@@ -21,7 +21,7 @@ from flask import Flask, request, jsonify
 #################################################################################################################################################################################
 #################################################################################################################################################################################
 
-def calculer_rentabilite(symbole, start_date, end_date):
+def calculer_rentabilite3(symbole, start_date, end_date):
     df = pd.read_csv(
         f"../fichier_python/historique_action/{symbole}_cloture.csv",
         encoding='utf-8',
@@ -40,10 +40,10 @@ def calculer_rentabilite(symbole, start_date, end_date):
     moyenne_rentabilite = df_periode['Rentabilite_Journaliere'].mean()
     return moyenne_rentabilite
 
-def calculer_matrice_rentabilite(symboles, start_date, end_date):
+def calculer_matrice_rentabilite3(symboles, start_date, end_date):
     rentabilites = []
     for s in symboles:
-        r = calculer_rentabilite(s, start_date, end_date)
+        r = calculer_rentabilite3(s, start_date, end_date)
         if r is None:
             print(f"Attention : rentabilité manquante pour {s}, valeur 0 par défaut")
             r = 0.0
@@ -56,7 +56,7 @@ def calculer_matrice_rentabilite(symboles, start_date, end_date):
 #################################################################################################################################################################################
 #################################################################################################################################################################################
 
-def calculer_covariance(symbole1, symbole2, start_date, end_date):
+def calculer_covariance3(symbole1, symbole2, start_date, end_date):
     df1 = pd.read_csv(
         rf"../fichier_python/historique_action/{symbole1}_cloture.csv",
         encoding='utf-8',
@@ -97,19 +97,19 @@ def calculer_covariance(symbole1, symbole2, start_date, end_date):
     return float(cov) if np.isscalar(cov) and not np.isnan(cov) else 0.0
 
 
-def calculer_matrice_covariance(symboles, start_date, end_date):
+def calculer_matrice_covariance3(symboles, start_date, end_date):
     n = len(symboles)
     matrice_covariance = np.zeros((n, n))
     for i in range(n):
         for j in range(i, n):
-            cov = calculer_covariance(symboles[i], symboles[j], start_date, end_date)
+            cov = calculer_covariance3(symboles[i], symboles[j], start_date, end_date)
             matrice_covariance[i][j] = cov
             matrice_covariance[j][i] = cov
     return matrice_covariance
 
 def calculer_risque_portefeuille(w, symboles, start_date, end_date):
     w_transpose = np.transpose(w)
-    matrice_covariance = calculer_matrice_covariance(symboles, start_date, end_date)
+    matrice_covariance = calculer_matrice_covariance3(symboles, start_date, end_date)
     variance_portefeuille = np.dot(np.dot(w_transpose, matrice_covariance), w)
     return variance_portefeuille**0.5
 
@@ -119,7 +119,7 @@ def calculer_risque_portefeuille(w, symboles, start_date, end_date):
 #################################################################################################################################################################################
 #################################################################################################################################################################################
 
-def calculer_co_semi_variance(symbole1, symbole2, start_date, end_date, taux_benchmark):
+def calculer_co_semi_variance3(symbole1, symbole2, start_date, end_date, taux_benchmark):
     taux_benchmark_journalier = (1+taux_benchmark)**(1/365)-1
     df1 = pd.read_csv(
         f"../fichier_python/historique_action/{symbole1}_cloture.csv",
@@ -178,21 +178,21 @@ def calculer_co_semi_variance(symbole1, symbole2, start_date, end_date, taux_ben
     return float(co_semi_var)
 
 
-def calculer_matrice_semi_variance(symboles, start_date, end_date, taux_benchmark):
+def calculer_matrice_semi_variance3(symboles, start_date, end_date, taux_benchmark):
     n = len(symboles)
     matrice_covariance = np.zeros((n, n))
     for i in range(n):
         for j in range(i, n):
-            cov = calculer_co_semi_variance(symboles[i], symboles[j], start_date, end_date, taux_benchmark)
+            cov = calculer_co_semi_variance3(symboles[i], symboles[j], start_date, end_date, taux_benchmark)
             matrice_covariance[i][j] = cov
             matrice_covariance[j][i] = cov
     return matrice_covariance
 
 
 
-def calculer_semi_risque_portefeuille(w, symboles, start_date, end_date, taux_benchmark):
+def calculer_semi_risque_portefeuille3(w, symboles, start_date, end_date, taux_benchmark):
     w_transpose = np.transpose(w)
-    matrice_covariance = calculer_matrice_semi_variance(symboles, start_date, end_date, taux_benchmark)
+    matrice_covariance = calculer_matrice_semi_variance3(symboles, start_date, end_date, taux_benchmark)
     variance_portefeuille = np.dot(np.dot(w_transpose, matrice_covariance), w)
     return variance_portefeuille**0.5
 
@@ -202,7 +202,7 @@ def calculer_semi_risque_portefeuille(w, symboles, start_date, end_date, taux_be
 #################################################################################################################################################################################
 #################################################################################################################################################################################
 
-def calculer_skewness_matrice(symboles, start_date, end_date):
+def calculer_skewness_matrice3(symboles, start_date, end_date):
     donnees = []
     for symbole in symboles:
         chemin = rf"../fichier_python/historique_action/{symbole}_cloture.csv"
@@ -242,7 +242,7 @@ def calculer_skewness_matrice(symboles, start_date, end_date):
 #################################################################################################################################################################################
 #################################################################################################################################################################################
 
-def calculer_kurtosis_matrice(symboles, start_date, end_date):
+def calculer_kurtosis_matrice3(symboles, start_date, end_date):
     donnees = []
     for symbole in symboles:
         chemin = rf"../fichier_python/historique_action/{symbole}_cloture.csv"
@@ -279,20 +279,20 @@ def calculer_kurtosis_matrice(symboles, start_date, end_date):
 #################################################################################################################################################################################
 #################################################################################################################################################################################
 
-def maximiser_ratio_sharpe(symboles, start_date, end_date, taux_benchmark):
+def maximiser_ratio_sharpe3(symboles, start_date, end_date, taux_benchmark):
     taux_benchmark_journalier = (1 + taux_benchmark)**(1/365) - 1
-    rendements = calculer_matrice_rentabilite(symboles, start_date, end_date).flatten()
-    covariance = calculer_matrice_covariance(symboles, start_date, end_date)
+    rendements = calculer_matrice_rentabilite3(symboles, start_date, end_date).flatten()
+    covariance = calculer_matrice_covariance3(symboles, start_date, end_date)
     n = len(rendements)
 
-    def ratio_sharpe(w):
+    def ratio_sharpe3(w):
         rendement = np.dot(w, rendements)
         risque = np.sqrt(np.dot(w.T, np.dot(covariance, w)))
         if risque == 0:
             return 0
         return (rendement - taux_benchmark_journalier) / risque
 
-    def gradient_ratio_sharpe(w):
+    def gradient_ratio_sharpe3(w):
         w = np.array(w)
         rendement = np.dot(w, rendements)
         risque_carre = np.dot(w.T, np.dot(covariance, w))
@@ -316,12 +316,12 @@ def maximiser_ratio_sharpe(symboles, start_date, end_date, taux_benchmark):
     w0 = np.ones(n) / n
 
     resultat = minimize(
-        lambda w: -ratio_sharpe(w),
+        lambda w: -ratio_sharpe3(w),
         w0,
         method='SLSQP',
         bounds=bornes,
         constraints=contrainte_somme,
-        jac=gradient_ratio_sharpe
+        jac=gradient_ratio_sharpe3
     )
 
     if resultat.success:
@@ -336,18 +336,18 @@ def maximiser_ratio_sharpe(symboles, start_date, end_date, taux_benchmark):
 #################################################################################################################################################################################
 #################################################################################################################################################################################
 
-def maximiser_ratio_sortino(symboles, start_date, end_date, taux_benchmark):
+def maximiser_ratio_sortino3(symboles, start_date, end_date, taux_benchmark):
     taux_benchmark_journalier = ( 1 + taux_benchmark)**(1/365)-1
-    rendement_matrice = calculer_matrice_rentabilite(symboles, start_date, end_date).flatten()
-    covariance_matrice = calculer_matrice_semi_variance(symboles, start_date, end_date, taux_benchmark)
+    rendement_matrice = calculer_matrice_rentabilite3(symboles, start_date, end_date).flatten()
+    covariance_matrice = calculer_matrice_semi_variance3(symboles, start_date, end_date, taux_benchmark)
     n = len(rendement_matrice)
 
-    def ratio_sortino(w):
+    def ratio_sortino3(w):
         rendement = np.dot(w, rendement_matrice)
         risque = np.sqrt(np.dot(w.T, np.dot(covariance_matrice, w)))
         return (rendement - taux_benchmark_journalier) / risque
 
-    def gradient_ratio_sortino(w):
+    def gradient_ratio_sortino3(w):
         w = np.array(w)
         risque_carre = np.dot(w.T, np.dot(covariance_matrice, w))
         risque = np.sqrt(risque_carre)
@@ -367,12 +367,12 @@ def maximiser_ratio_sortino(symboles, start_date, end_date, taux_benchmark):
     w0 = np.ones(n) / n
 
     resultat = minimize(
-        lambda w: -ratio_sortino(w),
+        lambda w: -ratio_sortino3(w),
         w0,
         method='SLSQP',
         bounds=bornes,
         constraints=contrainte_somme,
-        jac=gradient_ratio_sortino
+        jac=gradient_ratio_sortino3
     )
 
     if resultat.success:
@@ -387,7 +387,7 @@ def maximiser_ratio_sortino(symboles, start_date, end_date, taux_benchmark):
 #################################################################################################################################################################################
 #################################################################################################################################################################################
 
-def gradient_utilite(w, lambd, matrice_rentabilite, matrice_covariance, matrice_skewness, matrice_kurtosis):
+def gradient_utilite3(w, lambd, matrice_rentabilite, matrice_covariance, matrice_skewness, matrice_kurtosis):
     n = len(w)
     E_w = np.dot(w.T, matrice_rentabilite)
     M_w = np.dot(np.dot(w.T, matrice_covariance), w)
@@ -405,7 +405,7 @@ def gradient_utilite(w, lambd, matrice_rentabilite, matrice_covariance, matrice_
     grad_U = np.exp(-lambd * E_w) * (term1 + grad_A)
     
     return grad_U
-def utilite_exponentielle(w, lambd, matrice_rentabilite, matrice_covariance, matrice_skewness, matrice_kurtosis):
+def utilite_exponentielle3(w, lambd, matrice_rentabilite, matrice_covariance, matrice_skewness, matrice_kurtosis):
     E_w = np.dot(w.T, matrice_rentabilite)
     M_w = np.dot(np.dot(w.T, matrice_covariance), w)
     S_w = np.einsum('i,j,k,ijk->', w, w, w, matrice_skewness)
@@ -416,21 +416,21 @@ def utilite_exponentielle(w, lambd, matrice_rentabilite, matrice_covariance, mat
     return -utilite
 
 
-def optimiser_utilite_CARA(symboles, start_date, end_date, lambd):
-    matrice_rentabilite = calculer_matrice_rentabilite(symboles, start_date, end_date).flatten()
-    matrice_covariance = calculer_matrice_covariance(symboles, start_date, end_date)
-    matrice_skewness = calculer_skewness_matrice(symboles, start_date, end_date)
-    matrice_kurtosis = calculer_kurtosis_matrice(symboles, start_date, end_date)
+def optimiser_utilite_CARA3(symboles, start_date, end_date, lambd):
+    matrice_rentabilite = calculer_matrice_rentabilite3(symboles, start_date, end_date).flatten()
+    matrice_covariance = calculer_matrice_covariance3(symboles, start_date, end_date)
+    matrice_skewness = calculer_skewness_matrice3(symboles, start_date, end_date)
+    matrice_kurtosis = calculer_kurtosis_matrice3(symboles, start_date, end_date)
     n = len(symboles)
     w0 = np.ones(n) / n
     contraintes = [{'type': 'eq', 'fun': lambda w: np.sum(w) - 1, 'jac': lambda w: np.ones_like(w)}]
     bornes = [(0, 1) for _ in range(n)]
 
     def objectif(w, lambd, matrice_rentabilite, matrice_covariance, matrice_skewness, matrice_kurtosis):
-        return utilite_exponentielle(w, lambd, matrice_rentabilite, matrice_covariance, matrice_skewness, matrice_kurtosis)
+        return utilite_exponentielle3(w, lambd, matrice_rentabilite, matrice_covariance, matrice_skewness, matrice_kurtosis)
 
     resultat = minimize(objectif, w0, method='SLSQP',
-                        jac=gradient_utilite,
+                        jac=gradient_utilite3,
                         args=(lambd, matrice_rentabilite, matrice_covariance, matrice_skewness, matrice_kurtosis),
                         bounds=bornes, constraints=contraintes,
                         options={'disp': False, 'maxiter': 1000})
@@ -445,7 +445,7 @@ def optimiser_utilite_CARA(symboles, start_date, end_date, lambd):
 #################################################################################################################################################################################
 #################################################################################################################################################################################
 
-def charger_donnees(symboles):
+def charger_donnees3(symboles):
     donnees = {}
     for symbole in symboles:
         chemin = rf"../fichier_python/historique_action/{symbole}_cloture.csv"
@@ -465,12 +465,12 @@ def charger_donnees(symboles):
 #################################################################################################################################################################################
 #################################################################################################################################################################################
 
-def est_jour_boursier(date):
+def est_jour_boursier3(date):
     cal = mcal.get_calendar('XPAR')
     return cal.valid_days(start_date=date, end_date=date).size > 0
 
 
-def verifier_presence_date(symboles, date_str, donnees_symboles):
+def verifier_presence_date3(symboles, date_str, donnees_symboles):
     date = pd.to_datetime(date_str)
     for symbole in symboles:
         if symbole not in donnees_symboles:
@@ -489,7 +489,7 @@ def verifier_presence_date(symboles, date_str, donnees_symboles):
 #################################################################################################################################################################################
 #################################################################################################################################################################################
 
-def get_prix_cloture(symbole, date_str, donnees_symboles):
+def get_prix_cloture3(symbole, date_str, donnees_symboles):
     try:
         df = donnees_symboles[symbole]
         date = pd.to_datetime(date_str)
@@ -508,19 +508,19 @@ def get_prix_cloture(symbole, date_str, donnees_symboles):
 #################################################################################################################################################################################
 #################################################################################################################################################################################
 
-def calculer_rentabilite_1_titre(symbole, start_date, end_date, donnees_symboles) :
-    prix_debut = get_prix_cloture(symbole, start_date, donnees_symboles)
-    prix_fin = get_prix_cloture(symbole, end_date, donnees_symboles)
+def calculer_rentabilite_1_titre3(symbole, start_date, end_date, donnees_symboles) :
+    prix_debut = get_prix_cloture3(symbole, start_date, donnees_symboles)
+    prix_fin = get_prix_cloture3(symbole, end_date, donnees_symboles)
     if prix_debut==None or prix_fin==None :
         return 0
     rentabilite = (prix_fin-prix_debut)/prix_debut
     return rentabilite
 
 
-def calculer_rentabilite_n_titres(poids, symboles, start_date, end_date, donnees_symboles) :
+def calculer_rentabilite_n_titres3(poids, symboles, start_date, end_date, donnees_symboles) :
     rentabilite_total = 0
     for i in range(len(symboles)) :
-        rentabilite_total += poids[i] * calculer_rentabilite_1_titre(symboles[i], start_date, end_date, donnees_symboles)
+        rentabilite_total += poids[i] * calculer_rentabilite_1_titre3(symboles[i], start_date, end_date, donnees_symboles)
     return rentabilite_total
 
 #################################################################################################################################################################################
@@ -529,9 +529,9 @@ def calculer_rentabilite_n_titres(poids, symboles, start_date, end_date, donnees
 #################################################################################################################################################################################
 #################################################################################################################################################################################
 
-def simuler_rendement_long(start_date, end_date, duree_estimation, duree_investissement, symboles, poids_risque, indice, montant, taux_sans_risque, taux_benchmark, user_id, nom_simulation, methode, lamb):
+def simuler_rendement_long3(start_date, end_date, duree_estimation, duree_investissement, symboles, poids_risque, indice, montant, taux_sans_risque, taux_benchmark, user_id, nom_simulation, methode, lamb):
     titres = [indice] + symboles
-    donnees_titres = charger_donnees(titres)
+    donnees_titres = charger_donnees3(titres)
     fin_investissement = pd.to_datetime(end_date)
     debut_investissement_periode = pd.to_datetime(start_date)
 
@@ -542,13 +542,13 @@ def simuler_rendement_long(start_date, end_date, duree_estimation, duree_investi
     valeur_actuelle_indice = montant
 
     ancienne_date = debut_investissement_periode
-    while not verifier_presence_date(titres, ancienne_date, donnees_titres):
+    while not verifier_presence_date3(titres, ancienne_date, donnees_titres):
         ancienne_date += pd.Timedelta(days=1)
     premiere_date = ancienne_date
     date_actuelle = ancienne_date + pd.Timedelta(days=1)
     valeurs_titres = {}
     debut_investissement_periode = ancienne_date
-    if verifier_presence_date(titres, premiere_date, donnees_titres):
+    if verifier_presence_date3(titres, premiere_date, donnees_titres):
         valeur_portefeuille_total[premiere_date] = montant
         valeur_indice_total[premiere_date] = montant
     while debut_investissement_periode < fin_investissement:
@@ -560,35 +560,35 @@ def simuler_rendement_long(start_date, end_date, duree_estimation, duree_investi
 
         montant_risque = montant_portefeuille * poids_risque
         montant_sans_risque = montant_portefeuille * (1 - poids_risque)
-        while not verifier_presence_date(titres, fin_estimation_periode, donnees_titres):
+        while not verifier_presence_date3(titres, fin_estimation_periode, donnees_titres):
             fin_estimation_periode -= pd.Timedelta(days=1)
             if fin_estimation_periode < debut_estimation_periode:
                 break
-        while not verifier_presence_date(titres, debut_estimation_periode, donnees_titres):
+        while not verifier_presence_date3(titres, debut_estimation_periode, donnees_titres):
             debut_estimation_periode += pd.Timedelta(days=1)
             if debut_estimation_periode > debut_investissement_periode:
                 break
         if methode == "sharpe" :
-            poids_symboles = maximiser_ratio_sharpe(symboles, debut_estimation_periode, fin_estimation_periode, taux_benchmark)
+            poids_symboles = maximiser_ratio_sharpe3(symboles, debut_estimation_periode, fin_estimation_periode, taux_benchmark)
         elif methode == "moment_ordre_superieur" :
-            poids_symboles, score = optimiser_utilite_CARA(symboles, debut_estimation_periode, fin_estimation_periode, lamb)
+            poids_symboles, score = optimiser_utilite_CARA3(symboles, debut_estimation_periode, fin_estimation_periode, lamb)
         elif methode == 'sortino' :
-            poids_symboles = maximiser_ratio_sortino(symboles, debut_estimation_periode, fin_estimation_periode, taux_benchmark)
+            poids_symboles = maximiser_ratio_sortino3(symboles, debut_estimation_periode, fin_estimation_periode, taux_benchmark)
         valeurs_titres = {symbole: montant_risque * poids_symboles[i] for i, symbole in enumerate(symboles)}
         valeur_tresorerie = montant_sans_risque
         if date_actuelle > fin_investissement_periode:
             break
 
         while date_actuelle <= fin_investissement_periode:
-            if verifier_presence_date(titres, date_actuelle, donnees_titres):
+            if verifier_presence_date3(titres, date_actuelle, donnees_titres):
                 for symbole in symboles:
-                    rendement = calculer_rentabilite_1_titre(symbole, ancienne_date, date_actuelle, donnees_titres)
+                    rendement = calculer_rentabilite_1_titre3(symbole, ancienne_date, date_actuelle, donnees_titres)
                     valeurs_titres[symbole] *= (1 + rendement)
 
                 days = (date_actuelle - ancienne_date).days
                 valeur_tresorerie *= (1 + taux_sans_risque) ** (days / 365)
 
-                rendement_indice = calculer_rentabilite_1_titre(indice, ancienne_date, date_actuelle, donnees_titres)
+                rendement_indice = calculer_rentabilite_1_titre3(indice, ancienne_date, date_actuelle, donnees_titres)
                 valeur_actuelle_indice *= (1 + rendement_indice)
 
                 valeur_portefeuille_total[date_actuelle] = sum(valeurs_titres.values()) + valeur_tresorerie
@@ -681,9 +681,9 @@ def simuler_rendement_long(start_date, end_date, duree_estimation, duree_investi
 #################################################################################################################################################################################
 #################################################################################################################################################################################
 
-def simuler_rendement_rapide(start_date, end_date, duree_estimation, duree_investissement, symboles, poids_risque, indice, montant, taux_sans_risque, taux_benchmark, user_id, nom_simulation, methode,lamb):
+def simuler_rendement_rapide3(start_date, end_date, duree_estimation, duree_investissement, symboles, poids_risque, indice, montant, taux_sans_risque, taux_benchmark, user_id, nom_simulation, methode,lamb):
     titres = [indice] + symboles
-    donnees_titres = charger_donnees(titres)
+    donnees_titres = charger_donnees3(titres)
     fin_investissement = pd.to_datetime(end_date)
     
     valeur_portefeuille_total = {}
@@ -693,7 +693,7 @@ def simuler_rendement_rapide(start_date, end_date, duree_estimation, duree_inves
     valeur_actuelle_indice = montant
     
     current_date = pd.to_datetime(start_date)
-    while not verifier_presence_date(titres, current_date, donnees_titres):
+    while not verifier_presence_date3(titres, current_date, donnees_titres):
         current_date += pd.Timedelta(days=1)
     premiere_date = current_date
     valeur_portefeuille_total[premiere_date] = montant
@@ -704,7 +704,7 @@ def simuler_rendement_rapide(start_date, end_date, duree_estimation, duree_inves
         end_period = fin_investissement_periode
         if end_period > fin_investissement:
             end_period = fin_investissement
-        while not verifier_presence_date(titres, end_period, donnees_titres):
+        while not verifier_presence_date3(titres, end_period, donnees_titres):
             end_period -= pd.Timedelta(days=1)
             if end_period < current_date:
                 break
@@ -713,35 +713,35 @@ def simuler_rendement_rapide(start_date, end_date, duree_estimation, duree_inves
         
         fin_estimation = current_date - pd.Timedelta(days=1)
         debut_estimation = fin_estimation - pd.Timedelta(days=int(duree_estimation))
-        while not verifier_presence_date(titres, fin_estimation, donnees_titres):
+        while not verifier_presence_date3(titres, fin_estimation, donnees_titres):
             fin_estimation -= pd.Timedelta(days=1)
             if fin_estimation < debut_estimation:
                 break
-        while not verifier_presence_date(titres, debut_estimation, donnees_titres):
+        while not verifier_presence_date3(titres, debut_estimation, donnees_titres):
             debut_estimation += pd.Timedelta(days=1)
             if debut_estimation > fin_estimation:
                 break
         if debut_estimation > fin_estimation:
             continue
         if methode=='sharpe' :
-            poids_symboles = maximiser_ratio_sharpe(symboles, debut_estimation, fin_estimation, taux_benchmark)
+            poids_symboles = maximiser_ratio_sharpe3(symboles, debut_estimation, fin_estimation, taux_benchmark)
         elif methode=='moment_ordre_superieur':
-            poids_symboles, score = optimiser_utilite_CARA(symboles, debut_estimation, fin_estimation, lamb)
+            poids_symboles, score = optimiser_utilite_CARA3(symboles, debut_estimation, fin_estimation, lamb)
         elif methode == 'sortino' :
-            poids_symboles = maximiser_ratio_sortino(symboles, debut_estimation, fin_estimation, taux_benchmark)
+            poids_symboles = maximiser_ratio_sortino3(symboles, debut_estimation, fin_estimation, taux_benchmark)
 
         montant_risque = montant_portefeuille * poids_risque
         valeurs_titres = {symbole: montant_risque * poids_symboles[i] for i, symbole in enumerate(symboles)}
         valeur_tresorerie = montant_portefeuille * (1 - poids_risque)
         
         for symbole in symboles:
-            rendement = calculer_rentabilite_1_titre(symbole, current_date, end_period, donnees_titres)
+            rendement = calculer_rentabilite_1_titre3(symbole, current_date, end_period, donnees_titres)
             valeurs_titres[symbole] *= (1 + rendement)
         
         nb_jours = (end_period - current_date).days
         valeur_tresorerie *= (1 + taux_sans_risque) ** (nb_jours / 365)
         
-        rendement_indice = calculer_rentabilite_1_titre(indice, current_date, end_period, donnees_titres)
+        rendement_indice = calculer_rentabilite_1_titre3(indice, current_date, end_period, donnees_titres)
         valeur_actuelle_indice *= (1 + rendement_indice)
         
         valeur_portefeuille_total[end_period] = sum(valeurs_titres.values()) + valeur_tresorerie
@@ -832,76 +832,3 @@ def simuler_rendement_rapide(start_date, end_date, duree_estimation, duree_inves
 ######################################################### Traitement des arguments ##############################################################################################
 #################################################################################################################################################################################
 #################################################################################################################################################################################
-
-app = Flask(__name__)
-
-@app.route("/simuler_rendement", methods=["GET"])
-def simuler_rendement_api():
-    try:
-        date_debut = datetime.strptime(request.args.get("date_debut"), "%Y-%m-%d")
-        date_fin = datetime.strptime(request.args.get("date_fin"), "%Y-%m-%d")
-        duree_estimation = int(request.args.get("duree_estimation"))
-        duree_investissement = int(request.args.get("duree_investissement"))
-        titres = request.args.get("titres").split(',')
-        niveau_risque = float(request.args.get("niveau_risque"))
-        indice = request.args.get("indice")
-        user_id = request.args.get("user_id")
-        montant = float(request.args.get("montant"))
-        taux_sans_risque_annuel = float(request.args.get("taux_sans_risque_annuel"))
-        taux_benchmark = float(request.args.get("taux_benchmark"))
-        nom_simulation = request.args.get("nom_simulation")
-        graphique_option = request.args.get("graphique_option")
-        methode = request.args.get("methode") 
-        lamb = request.args.get("lambda", None)
-        if lamb is not None:
-            lamb = float(lamb)
-    except Exception as e:
-        return jsonify({"error": f"Paramètres incorrects: {str(e)}"}), 400
-
-    if methode not in ['sharpe', 'moment_ordre_superieur', 'sortino']:
-        return jsonify({"error": "Méthode non reconnue. Utilisez 'sharpe', 'moment_ordre_superieur' ou 'sortino'."}), 400
-
-    try:
-        if methode == "sharpe":
-            if graphique_option == "rapide":
-                reponse = simuler_rendement_rapide(date_debut, date_fin, duree_estimation,
-                                                    duree_investissement, titres, niveau_risque,
-                                                    indice, montant, taux_sans_risque_annuel,
-                                                    taux_benchmark, user_id, nom_simulation, methode, None)
-            else:
-                reponse = simuler_rendement_long(date_debut, date_fin, duree_estimation,
-                                                 duree_investissement, titres, niveau_risque,
-                                                 indice, montant, taux_sans_risque_annuel,
-                                                 taux_benchmark, user_id, nom_simulation, methode, None)
-        elif methode == "moment_ordre_superieur":
-            if lamb is None:
-                return jsonify({"error": "Le paramètre lambda est requis pour la méthode 'moment_ordre_superieur'"}), 400
-            if graphique_option == "rapide":
-                reponse = simuler_rendement_rapide(date_debut, date_fin, duree_estimation,
-                                                    duree_investissement, titres, niveau_risque,
-                                                    indice, montant, taux_sans_risque_annuel,
-                                                    taux_benchmark, user_id, nom_simulation, methode, lamb)
-            else:
-                reponse = simuler_rendement_long(date_debut, date_fin, duree_estimation,
-                                                 duree_investissement, titres, niveau_risque,
-                                                 indice, montant, taux_sans_risque_annuel,
-                                                 taux_benchmark, user_id, nom_simulation, methode, lamb)
-        else: 
-            if graphique_option == "rapide":
-                reponse = simuler_rendement_rapide(date_debut, date_fin, duree_estimation,
-                                                    duree_investissement, titres, niveau_risque,
-                                                    indice, montant, taux_sans_risque_annuel,
-                                                    taux_benchmark, user_id, nom_simulation, methode, None)
-            else:
-                reponse = simuler_rendement_long(date_debut, date_fin, duree_estimation,
-                                                 duree_investissement, titres, niveau_risque,
-                                                 indice, montant, taux_sans_risque_annuel,
-                                                 taux_benchmark, user_id, nom_simulation, methode, None)
-    except Exception as e:
-        return jsonify({"error": f"Erreur pendant la simulation: {str(e)}"}), 500
-
-    return jsonify(reponse)
-
-
-if __name__ == "__main__":
-    app.run(host="0.0.0.0", port=8000, debug=True)
