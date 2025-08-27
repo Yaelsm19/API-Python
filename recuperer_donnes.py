@@ -20,7 +20,7 @@ def recuperer_prix_cloture2(start_date, end_date, json_file):
     with open(json_file, 'r', encoding='utf-8') as f:
         actions = json.load(f)
 
-    os.makedirs('../fichier_python/historique_action', exist_ok=True)
+    os.makedirs('historique_action', exist_ok=True)
 
     nb_erreurs = 0
     nb_succes = 0
@@ -48,7 +48,7 @@ def recuperer_prix_cloture2(start_date, end_date, json_file):
             nom_fichier_nettoye = nom_fichier.replace("'", "-").replace("’", "-").replace(" ", "-")
 
             df_cloture.to_csv(
-                f"../fichier_python/historique_action\\{nom_fichier_nettoye}_cloture.csv",
+                f"historique_action\\{nom_fichier_nettoye}_cloture.csv",
                 index=False,
                 encoding='utf-8'
             )
@@ -68,7 +68,7 @@ def recuperer_prix_cloture2(start_date, end_date, json_file):
 
 
 def verifier_et_supprimer_fichiers_tout2(date_debut, date_actuelle):
-    dossier = "../fichier_python/historique_action"
+    dossier = "historique_action"
     date_min_ref = pd.to_datetime(date_debut) + timedelta(days=10)
     date_max_ref = pd.to_datetime(date_actuelle) - timedelta(days=10)
 
@@ -254,7 +254,7 @@ def completer_prix_csv_aujourdhui2(json_file):
     with open(json_file, 'r', encoding='utf-8') as f:
         actions = json.load(f)
 
-    dossier_csv = '../fichier_python/historique_action'
+    dossier_csv = 'historique_action'
     os.makedirs(dossier_csv, exist_ok=True)
 
     nb_maj = 0
@@ -325,7 +325,7 @@ def completer_prix_csv_aujourdhui2(json_file):
 #################################################################################################################################################################################
 
 def recuperer_prix_cloture_1_symbole2(start_date: str, end_date: str, nom: str, symbole: str) -> Optional[str]:
-    os.makedirs('../fichier_python/historique_action', exist_ok=True)
+    os.makedirs('historique_action', exist_ok=True)
     nom_fichier = nom
     print(f"Telechargement des donnees pour {nom_fichier} ({symbole})...")
     try:
@@ -338,7 +338,7 @@ def recuperer_prix_cloture_1_symbole2(start_date: str, end_date: str, nom: str, 
         df_cloture['Cours_Cloture'] = df['Close'].values
         df_cloture['Rentabilite_Journaliere'] = df_cloture['Cours_Cloture'].pct_change()
         nom_fichier_nettoye = nom_fichier.replace("'", "-").replace("’", "-").replace(" ", "-")
-        fichier_csv = f"../fichier_python/historique_action/{nom_fichier_nettoye}_cloture.csv"
+        fichier_csv = f"historique_action/{nom_fichier_nettoye}_cloture.csv"
         df_cloture.to_csv(fichier_csv, index=False, encoding='utf-8')
         print(f"OUI : {nom_fichier}_cloture.csv sauvegarde proprement.")
         return nom_fichier_nettoye
@@ -349,7 +349,7 @@ def recuperer_prix_cloture_1_symbole2(start_date: str, end_date: str, nom: str, 
 def verifier_et_supprimer_fichiers2(nom_fichier: str, start_date: str, end_date: str) -> int:
     date_min_ref = pd.to_datetime(start_date) + timedelta(days=10)
     date_max_ref = pd.to_datetime(end_date) - timedelta(days=10)
-    fichier = f"../fichier_python/historique_action/{nom_fichier}_cloture.csv"
+    fichier = f"historique_action/{nom_fichier}_cloture.csv"
 
     try:
         df = pd.read_csv(fichier, parse_dates=['Date'])
@@ -439,7 +439,7 @@ def ajouter_action_base_donnees2(nom: str, symbole: str) -> bool:
         cursor.close()
         conn.close()
 
-def ajouter_action_complete2(nom: str, symbole: str, start_date: str, end_date: str, fichier_json: str = "../euronext_nettoye.json") -> bool:
+def ajouter_action_complete2(nom: str, symbole: str, start_date: str, end_date: str, fichier_json: str = "euronext_nettoye.json") -> bool:
     try:
         init_database()
     except Exception as e:

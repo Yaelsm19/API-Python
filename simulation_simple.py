@@ -18,7 +18,7 @@ from flask import Flask, request, jsonify
 def charger_donnees4(symboles):
     donnees = {}
     for symbole in symboles:
-        chemin = f"../fichier_python/historique_action/{symbole}_cloture.csv"
+        chemin = f"historique_action/{symbole}_cloture.csv"
         try:
             df = pd.read_csv(chemin, encoding='utf-8', parse_dates=['Date'], index_col='Date')
             if 'Cours_Cloture' not in df.columns:
@@ -188,7 +188,7 @@ def simuler_rendement4(start_date, end_date, montant, poids_symboles, symboles, 
     plt.legend()
     plt.tight_layout()
 
-    dossier = "../image/graphique"
+    dossier = "image/graphique"
     os.makedirs(dossier, exist_ok=True)
     nom_fichier = f"simulation_rendement_{user_id}_{nom_simulation}.png"
     chemin_fichier = os.path.join(dossier, nom_fichier)

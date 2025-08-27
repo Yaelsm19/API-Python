@@ -14,7 +14,7 @@ from flask import Flask, request, jsonify
 
 def calculer_rentabilite1(symbole, start_date, end_date):
     df = pd.read_csv(
-        f"../fichier_python/historique_action/{symbole}_cloture.csv",
+        f"historique_action/{symbole}_cloture.csv",
         encoding='utf-8',
         parse_dates=['Date'],
         index_col='Date'
@@ -49,13 +49,13 @@ def calculer_matrice_rentabilite1(symboles, start_date, end_date):
 
 def calculer_covariance1(symbole1, symbole2, start_date, end_date):
     df1 = pd.read_csv(
-        f"../fichier_python/historique_action/{symbole1}_cloture.csv",
+        f"historique_action/{symbole1}_cloture.csv",
         encoding='utf-8',
         parse_dates=['Date'],
         index_col='Date'
     )
     df2 = pd.read_csv(
-        f"../fichier_python/historique_action/{symbole2}_cloture.csv",
+        f"historique_action/{symbole2}_cloture.csv",
         encoding='utf-8',
         parse_dates=['Date'],
         index_col='Date'
@@ -115,7 +115,7 @@ def calculer_risque_portefeuille1(w, symboles, start_date, end_date):
 def calculer_co_semi_variance1(symbole1, symbole2, start_date, end_date, taux_benchmark):
     taux_benchmark_journalier = (1+taux_benchmark)**(1/365)-1
     df1 = pd.read_csv(
-        f"../fichier_python/historique_action/{symbole1}_cloture.csv",
+        f"historique_action/{symbole1}_cloture.csv",
         encoding='utf-8',
         parse_dates=['Date'],
         index_col='Date'
@@ -125,7 +125,7 @@ def calculer_co_semi_variance1(symbole1, symbole2, start_date, end_date, taux_be
         df2 = df1.copy()
     else:
         df2 = pd.read_csv(
-            f"../fichier_python/historique_action/{symbole2}_cloture.csv",
+            f"historique_action/{symbole2}_cloture.csv",
             encoding='utf-8',
             parse_dates=['Date'],
             index_col='Date'
@@ -196,7 +196,7 @@ def calculer_semi_risque_portefeuille1(w, symboles, start_date, end_date, taux_b
 def calculer_skewness_matrice1(symboles, start_date, end_date):
     donnees = []
     for symbole in symboles:
-        chemin = f"../fichier_python/historique_action/{symbole}_cloture.csv"
+        chemin = f"historique_action/{symbole}_cloture.csv"
         df = pd.read_csv(chemin, parse_dates=['Date'], index_col='Date', encoding='utf-8')
 
         if 'Rentabilite_Journaliere' not in df.columns:
@@ -236,7 +236,7 @@ def calculer_skewness_matrice1(symboles, start_date, end_date):
 def calculer_kurtosis_matrice1(symboles, start_date, end_date):
     donnees = []
     for symbole in symboles:
-        chemin = f"../fichier_python/historique_action/{symbole}_cloture.csv"
+        chemin = f"historique_action/{symbole}_cloture.csv"
         df = pd.read_csv(chemin, parse_dates=['Date'], index_col='Date', encoding='utf-8')
 
         if 'Rentabilite_Journaliere' not in df.columns:

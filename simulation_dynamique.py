@@ -23,7 +23,7 @@ from flask import Flask, request, jsonify
 
 def calculer_rentabilite3(symbole, start_date, end_date):
     df = pd.read_csv(
-        f"../fichier_python/historique_action/{symbole}_cloture.csv",
+        f"historique_action/{symbole}_cloture.csv",
         encoding='utf-8',
         parse_dates=['Date'],
         index_col='Date'
@@ -58,13 +58,13 @@ def calculer_matrice_rentabilite3(symboles, start_date, end_date):
 
 def calculer_covariance3(symbole1, symbole2, start_date, end_date):
     df1 = pd.read_csv(
-        rf"../fichier_python/historique_action/{symbole1}_cloture.csv",
+        rf"historique_action/{symbole1}_cloture.csv",
         encoding='utf-8',
         parse_dates=['Date'],
         index_col='Date'
     )
     df2 = pd.read_csv(
-        rf"../fichier_python/historique_action/{symbole2}_cloture.csv",
+        rf"historique_action/{symbole2}_cloture.csv",
         encoding='utf-8',
         parse_dates=['Date'],
         index_col='Date'
@@ -122,7 +122,7 @@ def calculer_risque_portefeuille(w, symboles, start_date, end_date):
 def calculer_co_semi_variance3(symbole1, symbole2, start_date, end_date, taux_benchmark):
     taux_benchmark_journalier = (1+taux_benchmark)**(1/365)-1
     df1 = pd.read_csv(
-        f"../fichier_python/historique_action/{symbole1}_cloture.csv",
+        f"historique_action/{symbole1}_cloture.csv",
         encoding='utf-8',
         parse_dates=['Date'],
         index_col='Date'
@@ -132,7 +132,7 @@ def calculer_co_semi_variance3(symbole1, symbole2, start_date, end_date, taux_be
         df2 = df1.copy()
     else:
         df2 = pd.read_csv(
-            f"../fichier_python/historique_action/{symbole2}_cloture.csv",
+            f"historique_action/{symbole2}_cloture.csv",
             encoding='utf-8',
             parse_dates=['Date'],
             index_col='Date'
@@ -205,7 +205,7 @@ def calculer_semi_risque_portefeuille3(w, symboles, start_date, end_date, taux_b
 def calculer_skewness_matrice3(symboles, start_date, end_date):
     donnees = []
     for symbole in symboles:
-        chemin = rf"../fichier_python/historique_action/{symbole}_cloture.csv"
+        chemin = rf"historique_action/{symbole}_cloture.csv"
         df = pd.read_csv(chemin, parse_dates=['Date'], index_col='Date', encoding='utf-8')
 
         if 'Rentabilite_Journaliere' not in df.columns:
@@ -245,7 +245,7 @@ def calculer_skewness_matrice3(symboles, start_date, end_date):
 def calculer_kurtosis_matrice3(symboles, start_date, end_date):
     donnees = []
     for symbole in symboles:
-        chemin = rf"../fichier_python/historique_action/{symbole}_cloture.csv"
+        chemin = rf"historique_action/{symbole}_cloture.csv"
         df = pd.read_csv(chemin, parse_dates=['Date'], index_col='Date', encoding='utf-8')
 
         if 'Rentabilite_Journaliere' not in df.columns:
@@ -448,7 +448,7 @@ def optimiser_utilite_CARA3(symboles, start_date, end_date, lambd):
 def charger_donnees3(symboles):
     donnees = {}
     for symbole in symboles:
-        chemin = rf"../fichier_python/historique_action/{symbole}_cloture.csv"
+        chemin = rf"historique_action/{symbole}_cloture.csv"
         try:
             df = pd.read_csv(chemin, encoding='utf-8', parse_dates=['Date'], index_col='Date')
             if 'Cours_Cloture' not in df.columns:
@@ -652,7 +652,7 @@ def simuler_rendement_long3(start_date, end_date, duree_estimation, duree_invest
     plt.legend()
     plt.tight_layout()
 
-    dossier = "../image/graphique"
+    dossier = "image/graphique"
     os.makedirs(dossier, exist_ok=True)
     nom_fichier = f"simulationdyn_rendement_{user_id}_{nom_simulation}.png"
     chemin_fichier = os.path.join(dossier, nom_fichier)
@@ -803,7 +803,7 @@ def simuler_rendement_rapide3(start_date, end_date, duree_estimation, duree_inve
     plt.legend()
     plt.tight_layout()
     
-    dossier = "../image/graphique"
+    dossier = "image/graphique"
     os.makedirs(dossier, exist_ok=True)
     nom_fichier = f"simulationdyn_rendement_{user_id}_{nom_simulation}.png"
     chemin_fichier = os.path.join(dossier, nom_fichier)
