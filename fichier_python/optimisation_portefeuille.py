@@ -4,6 +4,7 @@ import numpy as np
 from scipy.optimize import minimize
 import sys
 import json
+from flask import Flask, request, jsonify
 
 #################################################################################################################################################################################
 #################################################################################################################################################################################
@@ -463,31 +464,52 @@ def optimiser_utilite_CARA(symboles, start_date, end_date, lambd):
 #################################################################################################################################################################################
 #################################################################################################################################################################################
 
-def traitement_arguments() :
-    if len(sys.argv) !=7 and len(sys.argv)!=6:
-        print("Nombre d'arguments incorrect.")
-        sys.exit(1)
-    titres = sys.argv[1].split(',')
-    date_debut = datetime.strptime(sys.argv[2], "%Y-%m-%d")
-    date_fin = datetime.strptime(sys.argv[3], "%Y-%m-%d")
-    methode = sys.argv[4]
-    if methode not in ['sharpe', 'moment_ordre_superieur', 'sortino']:
-        print("Méthode non reconnue. Utilisez 'sharpe' ou 'moment_ordre_superieur'.")
-        sys.exit(1)
-    taux_benchmark = float(sys.argv[5])
-    if methode=="sharpe" :
-            df_optimisation, df_portefeuille = maximiser_ratio_sharpe(titres, date_debut, date_fin, taux_benchmark)
-    elif methode=="moment_ordre_superieur":
-            lamb = float(sys.argv[6])
-            df_optimisation, df_portefeuille = optimiser_utilite_CARA(titres, date_debut, date_fin, lamb)
-    elif methode=="sortino" :
-        df_optimisation, df_portefeuille = maximiser_ratio_sortino(titres, date_debut, date_fin, taux_benchmark)
-    df_process = process_tout_action(titres, date_debut, date_fin)
-    reponse = {
-    "optimisation": df_optimisation.to_dict(orient='records'),
-    "process": df_process.to_dict(orient='records'),
-    "portefeuille": df_portefeuille.to_dict(orient='records')
-    }
-    print(json.dumps(reponse))
 
-traitement_arguments()
+
+app = Flask(__name__)
+
+@app.route("/optimiser", methods=["POST"])
+def optimiser():
+    try:
+        data = request.get_json()
+
+        titres = data.get("titres")
+        date_debut = datetime.strptime(data.get("date_debut"), "%Y-%m-%d")
+        date_fin = datetime.strptime(data.get("date_fin"), "%Y-%m-%d")
+        methode = data.get("methode")
+        taux_benchmark = float(data.get("taux_benchmark", 0.0))
+
+        if methode not in ['sharpe', 'moment_ordre_superieur', 'sortino']:
+            return jsonify({"erreur": "Méthode non reconnue."}), 400
+        
+        if methode == "sharpe":
+            df_optimisation, df_portefeuille = maximiser_ratio_sharpe(
+                titres, date_debut, date_fin, taux_benchmark
+            )
+        elif methode == "moment_ordre_superieur":
+            lamb = float(data.get("lambda"))
+            df_optimisation, df_portefeuille = optimiser_utilite_CARA(
+                titres, date_debut, date_fin, lamb
+            )
+        elif methode == "sortino":
+            df_optimisation, df_portefeuille = maximiser_ratio_sortino(
+                titres, date_debut, date_fin, taux_benchmark
+            )
+
+
+        df_process = process_tout_action(titres, date_debut, date_fin)
+
+        reponse = {
+            "optimisation": df_optimisation.to_dict(orient="records"),
+            "process": df_process.to_dict(orient="records"),
+            "portefeuille": df_portefeuille.to_dict(orient="records")
+        }
+
+        return jsonify(reponse)
+
+    except Exception as e:
+        return jsonify({"erreur": str(e)}), 500
+
+
+if __name__ == "__main__":
+    app.run(host="0.0.0.0", port=8080)

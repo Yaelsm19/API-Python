@@ -10,6 +10,7 @@ import mysql.connector
 from datetime import datetime, timedelta
 from typing import Optional
 from mysql.connector import Error
+from flask import Flask, request, jsonify
 #################################################################################################################################################################################
 #################################################################################################################################################################################
 ######################################################################## Tout recuperer #########################################################################################
@@ -465,31 +466,31 @@ def ajouter_action_complete(nom: str, symbole: str, start_date: str, end_date: s
     print(f"Action {nom} ({symbole}) ajoutee avec succès (JSON, base de donnees, donnees historiques).")
     return True
 
-def traitement_argument():
-    if len(sys.argv) not in (2, 3, 5):
-        print("Nombre d'arguments incorrect.")
-        sys.exit(1)
 
-    choix = sys.argv[1]
+app = Flask(__name__)
+
+@app.route("/recuperer_tout", methods=["GET"])
+def recuperer_tout():
+    date_debut = request.args.get("date_debut")
     tz_paris = ZoneInfo("Europe/Paris")
-    now_paris = datetime.now(tz_paris)
-    date_actuelle = now_paris.date()
+    date_actuelle = datetime.now(tz_paris).date()
+    tout_faire(date_debut, date_actuelle, "../euronext_nettoye.json", "sql_file", "../fichier_python/historique_action")
+    return jsonify({"message": "Récupération terminée", "date_debut": date_debut, "date_fin": str(date_actuelle)})
 
-    if choix == "recuperer_tout":
-        date_debut = sys.argv[2]
-        tout_faire(date_debut, date_actuelle, "../euronext_nettoye.json", "sql_file", "../fichier_python/historique_action")
-    elif choix == "recuperer_un":
-        date_debut = sys.argv[2]
-        nom_titre = sys.argv[3]
-        symbole_titre = sys.argv[4]
-        ajouter_action_complete(nom_titre, symbole_titre, date_debut, date_actuelle)
-    elif choix == "completer_tout" :
-        completer_prix_csv_aujourdhui("../euronext_nettoye.json")
-    else:
-        print("Choix invalide.")
-        sys.exit(1)
+@app.route("/recuperer_un", methods=["GET"])
+def recuperer_un():
+    date_debut = request.args.get("date_debut")
+    nom_titre = request.args.get("nom_titre")
+    symbole_titre = request.args.get("symbole_titre")
+    tz_paris = ZoneInfo("Europe/Paris")
+    date_actuelle = datetime.now(tz_paris).date()
+    ajouter_action_complete(nom_titre, symbole_titre, date_debut, date_actuelle)
+    return jsonify({"message": f"Action {nom_titre} ({symbole_titre}) ajoutée", "date_debut": date_debut, "date_fin": str(date_actuelle)})
+
+@app.route("/completer_tout", methods=["GET"])
+def completer_tout():
+    completer_prix_csv_aujourdhui("../euronext_nettoye.json")
+    return jsonify({"message": "Complétion terminée"})
 
 
-
-traitement_argument()
 

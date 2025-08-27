@@ -11,6 +11,8 @@ import numpy as np
 from scipy.optimize import minimize
 from sqlalchemy import null
 
+from flask import Flask, request, jsonify
+
 
 
 #################################################################################################################################################################################
@@ -831,43 +833,75 @@ def simuler_rendement_rapide(start_date, end_date, duree_estimation, duree_inves
 #################################################################################################################################################################################
 #################################################################################################################################################################################
 
-def traitement_argument() :
-    if (len(sys.argv)!=15 and len(sys.argv)!=16) :
-        print("Nombre d'arguments incorrect.")
-        sys.exit(1)
-    date_debut = datetime.strptime(sys.argv[1], "%Y-%m-%d")
-    date_fin = datetime.strptime(sys.argv[2], "%Y-%m-%d")
-    duree_estimation = int(sys.argv[3])
-    duree_investissement = int(sys.argv[4])
-    titres = sys.argv[5].split(',')
-    niveau_risque = float(sys.argv[6])
-    indice = sys.argv[7]
-    user_id = sys.argv[8]
-    montant = float(sys.argv[9])
-    taux_sans_risque_annuel = float(sys.argv[10])
-    taux_benchmark = float(sys.argv[11])
-    nom_simulation = sys.argv[12]
-    graphique_option = sys.argv[13]
-    methode = sys.argv[14]
-    if methode not in ['sharpe', 'moment_ordre_superieur', 'sortino']:
-        print("Méthode non reconnue. Utilisez 'sharpe', 'moment_ordre_superieur' ou 'sortino'.")
-        sys.exit(1)
-    if methode == "sharpe" :
-        if graphique_option=="rapide" :
-            reponse = simuler_rendement_rapide(date_debut, date_fin, duree_estimation, duree_investissement, titres, niveau_risque, indice, montant, taux_sans_risque_annuel, taux_benchmark, user_id, nom_simulation, methode, null)
-        elif graphique_option=="long" :
-            reponse = simuler_rendement_long(date_debut, date_fin, duree_estimation, duree_investissement, titres, niveau_risque, indice, montant, taux_sans_risque_annuel, taux_benchmark, user_id, nom_simulation, methode, null)
-    elif methode == "moment_ordre_superieur" :
-        lamb = float(sys.argv[15])
-        if graphique_option=="rapide" :
-            reponse = simuler_rendement_rapide(date_debut, date_fin, duree_estimation, duree_investissement, titres, niveau_risque, indice, montant, taux_sans_risque_annuel, taux_benchmark, user_id, nom_simulation, methode, lamb)
-        elif graphique_option=="long" :
-            reponse = simuler_rendement_long(date_debut, date_fin, duree_estimation, duree_investissement, titres, niveau_risque, indice, montant, taux_sans_risque_annuel, taux_benchmark, user_id, nom_simulation, methode, lamb)
-    elif methode == "sortino" :
-        if graphique_option=="rapide" :
-            reponse = simuler_rendement_rapide(date_debut, date_fin, duree_estimation, duree_investissement, titres, niveau_risque, indice, montant, taux_sans_risque_annuel, taux_benchmark, user_id, nom_simulation, methode, null)
-        elif graphique_option=="long" :
-            reponse = simuler_rendement_long(date_debut, date_fin, duree_estimation, duree_investissement, titres, niveau_risque, indice, montant, taux_sans_risque_annuel, taux_benchmark, user_id, nom_simulation, methode, null)
-    print(json.dumps(reponse))
+app = Flask(__name__)
 
-traitement_argument()
+@app.route("/simuler_rendement", methods=["GET"])
+def simuler_rendement_api():
+    try:
+        date_debut = datetime.strptime(request.args.get("date_debut"), "%Y-%m-%d")
+        date_fin = datetime.strptime(request.args.get("date_fin"), "%Y-%m-%d")
+        duree_estimation = int(request.args.get("duree_estimation"))
+        duree_investissement = int(request.args.get("duree_investissement"))
+        titres = request.args.get("titres").split(',')
+        niveau_risque = float(request.args.get("niveau_risque"))
+        indice = request.args.get("indice")
+        user_id = request.args.get("user_id")
+        montant = float(request.args.get("montant"))
+        taux_sans_risque_annuel = float(request.args.get("taux_sans_risque_annuel"))
+        taux_benchmark = float(request.args.get("taux_benchmark"))
+        nom_simulation = request.args.get("nom_simulation")
+        graphique_option = request.args.get("graphique_option")
+        methode = request.args.get("methode") 
+        lamb = request.args.get("lambda", None)
+        if lamb is not None:
+            lamb = float(lamb)
+    except Exception as e:
+        return jsonify({"error": f"Paramètres incorrects: {str(e)}"}), 400
+
+    if methode not in ['sharpe', 'moment_ordre_superieur', 'sortino']:
+        return jsonify({"error": "Méthode non reconnue. Utilisez 'sharpe', 'moment_ordre_superieur' ou 'sortino'."}), 400
+
+    try:
+        if methode == "sharpe":
+            if graphique_option == "rapide":
+                reponse = simuler_rendement_rapide(date_debut, date_fin, duree_estimation,
+                                                    duree_investissement, titres, niveau_risque,
+                                                    indice, montant, taux_sans_risque_annuel,
+                                                    taux_benchmark, user_id, nom_simulation, methode, None)
+            else:
+                reponse = simuler_rendement_long(date_debut, date_fin, duree_estimation,
+                                                 duree_investissement, titres, niveau_risque,
+                                                 indice, montant, taux_sans_risque_annuel,
+                                                 taux_benchmark, user_id, nom_simulation, methode, None)
+        elif methode == "moment_ordre_superieur":
+            if lamb is None:
+                return jsonify({"error": "Le paramètre lambda est requis pour la méthode 'moment_ordre_superieur'"}), 400
+            if graphique_option == "rapide":
+                reponse = simuler_rendement_rapide(date_debut, date_fin, duree_estimation,
+                                                    duree_investissement, titres, niveau_risque,
+                                                    indice, montant, taux_sans_risque_annuel,
+                                                    taux_benchmark, user_id, nom_simulation, methode, lamb)
+            else:
+                reponse = simuler_rendement_long(date_debut, date_fin, duree_estimation,
+                                                 duree_investissement, titres, niveau_risque,
+                                                 indice, montant, taux_sans_risque_annuel,
+                                                 taux_benchmark, user_id, nom_simulation, methode, lamb)
+        else: 
+            if graphique_option == "rapide":
+                reponse = simuler_rendement_rapide(date_debut, date_fin, duree_estimation,
+                                                    duree_investissement, titres, niveau_risque,
+                                                    indice, montant, taux_sans_risque_annuel,
+                                                    taux_benchmark, user_id, nom_simulation, methode, None)
+            else:
+                reponse = simuler_rendement_long(date_debut, date_fin, duree_estimation,
+                                                 duree_investissement, titres, niveau_risque,
+                                                 indice, montant, taux_sans_risque_annuel,
+                                                 taux_benchmark, user_id, nom_simulation, methode, None)
+    except Exception as e:
+        return jsonify({"error": f"Erreur pendant la simulation: {str(e)}"}), 500
+
+    return jsonify(reponse)
+
+
+if __name__ == "__main__":
+    app.run(host="0.0.0.0", port=8000, debug=True)

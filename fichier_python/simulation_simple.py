@@ -6,6 +6,7 @@ import pandas_market_calendars as mcal
 import os
 import sys
 import json
+from flask import Flask, request, jsonify
 
 
 #################################################################################################################################################################################
@@ -214,26 +215,34 @@ def simuler_rendement(start_date, end_date, montant, poids_symboles, symboles, p
 #################################################################################################################################################################################
 #################################################################################################################################################################################
 
-def traitement_argument() :
-    if (len(sys.argv)!=11) :
-        print("Nombre d'arguments incorrect.")
-        sys.exit(1)
-    date_debut = datetime.strptime(sys.argv[1], "%Y-%m-%d")
-    date_fin = datetime.strptime(sys.argv[2], "%Y-%m-%d")
-    w = sys.argv[3]
-    titres = sys.argv[4].split(',')
-    poids_str = float(sys.argv[5])
-    indice = sys.argv[6]
-    user_id = sys.argv[7]
-    montant = float(sys.argv[8]) if len(sys.argv) > 8 else 1000
-    if not isinstance(montant, (int, float)) or montant <= 0:
-        sys.exit(1)
-    taux_sans_risque = float(sys.argv[9]) if len(sys.argv) > 9 else 0.000092
-    nom_simulation = sys.argv[10]
-    w_liste = [float(p.strip()) for p in w.split(',')]
-    for i in range(len(w_liste)) :
-        w_liste[i] = w_liste[i]/100
-    reponse = simuler_rendement(date_debut, date_fin, montant, w_liste, titres, poids_str, taux_sans_risque, indice, user_id, nom_simulation)
-    print(json.dumps(reponse))
+app = Flask(__name__)
 
-traitement_argument()
+@app.route("/simuler_rendement", methods=["GET"])
+def simuler_rendement_api():
+    try:
+        date_debut = datetime.strptime(request.args.get("date_debut"), "%Y-%m-%d")
+        date_fin = datetime.strptime(request.args.get("date_fin"), "%Y-%m-%d")
+        w = request.args.get("w")
+        titres = request.args.get("titres").split(',')
+        poids_str = float(request.args.get("poids_str"))
+        indice = request.args.get("indice")
+        user_id = request.args.get("user_id")
+        montant = float(request.args.get("montant", 1000))
+        if montant <= 0:
+            return jsonify({"error": "Montant doit être positif."}), 400
+        taux_sans_risque = float(request.args.get("taux_sans_risque", 0.000092))
+        nom_simulation = request.args.get("nom_simulation")
+
+        w_liste = [float(p.strip())/100 for p in w.split(',')]
+
+        reponse = simuler_rendement(date_debut, date_fin, montant, w_liste, titres, poids_str, taux_sans_risque, indice, user_id, nom_simulation)
+
+    except Exception as e:
+        return jsonify({"error": f"Paramètres invalides ou erreur: {str(e)}"}), 400
+
+    return jsonify(reponse)
+
+
+if __name__ == "__main__":
+    app.run(host="0.0.0.0", port=8000, debug=True)
+
