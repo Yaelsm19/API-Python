@@ -1,0 +1,886 @@
+[
+    {
+        "nom": "STMICROELECTRONICS",
+        "symbole": "STMMI.MI"
+    },
+    {
+        "nom": "SOLVAY",
+        "symbole": "SOLB.BR"
+    },
+    {
+        "nom": "TECHNIPFMC",
+        "symbole": "FTI"
+    },
+    {
+        "nom": "TOTALENERGIES",
+        "symbole": "TTE.PA"
+    },
+    {
+        "nom": "LVMH",
+        "symbole": "MC.PA"
+    },
+    {
+        "nom": "L-OREAL",
+        "symbole": "OR.PA"
+    },
+    {
+        "nom": "SANOFI",
+        "symbole": "SAN.PA"
+    },
+    {
+        "nom": "HERMES-INTL",
+        "symbole": "RMS.PA"
+    },
+    {
+        "nom": "AIRBUS",
+        "symbole": "AIR.PA"
+    },
+    {
+        "nom": "CHRISTIAN-DIOR",
+        "symbole": "CDI.PA"
+    },
+    {
+        "nom": "KERING",
+        "symbole": "KER.PA"
+    },
+    {
+        "nom": "AIR-LIQUIDE",
+        "symbole": "AI.PA"
+    },
+    {
+        "nom": "ESSILORLUXOTTICA",
+        "symbole": "EL.PA"
+    },
+    {
+        "nom": "BNP-PARIBAS-ACT.A",
+        "symbole": "BNP.PA"
+    },
+    {
+        "nom": "VINCI",
+        "symbole": "DG.PA"
+    },
+    {
+        "nom": "AXA",
+        "symbole": "CS.PA"
+    },
+    {
+        "nom": "DANONE",
+        "symbole": "BN.PA"
+    },
+    {
+        "nom": "SAFRAN",
+        "symbole": "SAF.PA"
+    },
+    {
+        "nom": "PERNOD-RICARD",
+        "symbole": "RI.PA"
+    },
+    {
+        "nom": "DASSAULT-SYSTEMES",
+        "symbole": "DSY.PA"
+    },
+    {
+        "nom": "ORANGE",
+        "symbole": "ORA.PA"
+    },
+    {
+        "nom": "ENGIE",
+        "symbole": "ENGI.PA"
+    },
+    {
+        "nom": "VIVENDI",
+        "symbole": "VIV.PA"
+    },
+    {
+        "nom": "CREDIT-AGRICOLE",
+        "symbole": "ACA.PA"
+    },
+    {
+        "nom": "THALES",
+        "symbole": "HO.PA"
+    },
+    {
+        "nom": "SARTORIUS-STED-BIO",
+        "symbole": "DIM.PA"
+    },
+    {
+        "nom": "SOCIETE-GENERALE",
+        "symbole": "GLE.PA"
+    },
+    {
+        "nom": "MICHELIN",
+        "symbole": "ML.PA"
+    },
+    {
+        "nom": "SAINT-GOBAIN",
+        "symbole": "SGO.PA"
+    },
+    {
+        "nom": "CAPGEMINI",
+        "symbole": "CAP.PA"
+    },
+    {
+        "nom": "CARREFOUR",
+        "symbole": "CA.PA"
+    },
+    {
+        "nom": "TELEPERFORMANCE",
+        "symbole": "TEP.PA"
+    },
+    {
+        "nom": "VEOLIA-ENVIRON.",
+        "symbole": "VIE.PA"
+    },
+    {
+        "nom": "BIOMERIEUX",
+        "symbole": "BIM.PA"
+    },
+    {
+        "nom": "BOUYGUES",
+        "symbole": "EN.PA"
+    },
+    {
+        "nom": "SODEXO",
+        "symbole": "SW.PA"
+    },
+    {
+        "nom": "GECINA-NOM.",
+        "symbole": "GFC.PA"
+    },
+    {
+        "nom": "BOLLORE",
+        "symbole": "BOL.PA"
+    },
+    {
+        "nom": "UBISOFT-ENTERTAIN",
+        "symbole": "UBI.PA"
+    },
+    {
+        "nom": "ACCOR",
+        "symbole": "AC.PA"
+    },
+    {
+        "nom": "EIFFAGE",
+        "symbole": "FGR.PA"
+    },
+    {
+        "nom": "DASSAULT-AVIATION",
+        "symbole": "AM.PA"
+    },
+    {
+        "nom": "PUBLICIS-GROUPE-SA",
+        "symbole": "PUB.PA"
+    },
+    {
+        "nom": "COVIVIO",
+        "symbole": "COV.PA"
+    },
+    {
+        "nom": "ATOS",
+        "symbole": "ATO.PA"
+    },
+    {
+        "nom": "ICADE",
+        "symbole": "ICAD.PA"
+    },
+    {
+        "nom": "S.E.B.",
+        "symbole": "SK.PA"
+    },
+    {
+        "nom": "RENAULT",
+        "symbole": "RNO.PA"
+    },
+    {
+        "nom": "KLEPIERRE",
+        "symbole": "LI.PA"
+    },
+    {
+        "nom": "REMY-COINTREAU",
+        "symbole": "RCO.PA"
+    },
+    {
+        "nom": "RUBIS",
+        "symbole": "RUI.PA"
+    },
+    {
+        "nom": "SCOR-SE",
+        "symbole": "SCR.PA"
+    },
+    {
+        "nom": "EURAZEO",
+        "symbole": "RF.PA"
+    },
+    {
+        "nom": "JC-DECAUX-SA.",
+        "symbole": "DEC.PA"
+    },
+    {
+        "nom": "WENDEL",
+        "symbole": "MF.PA"
+    },
+    {
+        "nom": "FONCIERE-LYONNAISE",
+        "symbole": "FLY.PA"
+    },
+    {
+        "nom": "VALEO",
+        "symbole": "FR.PA"
+    },
+    {
+        "nom": "CAMBODGE-NOM.",
+        "symbole": "CBDG.PA"
+    },
+    {
+        "nom": "CASINO-GUICHARD",
+        "symbole": "CO.PA"
+    },
+    {
+        "nom": "COVIVIO-HOTELS",
+        "symbole": "COVH.PA"
+    },
+    {
+        "nom": "CRCAM-PARIS-ET-IDF",
+        "symbole": "CAF.PA"
+    },
+    {
+        "nom": "ALTAREA",
+        "symbole": "ALTA.PA"
+    },
+    {
+        "nom": "ALTEN",
+        "symbole": "ATE.PA"
+    },
+    {
+        "nom": "FINANCIERE-ODET",
+        "symbole": "ODET.PA"
+    },
+    {
+        "nom": "BIC",
+        "symbole": "BB.PA"
+    },
+    {
+        "nom": "SOPRA-STERIA-GROUP",
+        "symbole": "SOP.PA"
+    },
+    {
+        "nom": "AIR-FRANCE--KLM",
+        "symbole": "AF.PA"
+    },
+    {
+        "nom": "SOITEC",
+        "symbole": "SOI.PA"
+    },
+    {
+        "nom": "IMERYS",
+        "symbole": "NK.PA"
+    },
+    {
+        "nom": "RAMSAY-GEN-SANTE",
+        "symbole": "GDS.PA"
+    },
+    {
+        "nom": "ROBERTET",
+        "symbole": "RBT.PA"
+    },
+    {
+        "nom": "NEXITY",
+        "symbole": "NXI.PA"
+    },
+    {
+        "nom": "CRCAM-BRIE-PIC2CCI",
+        "symbole": "CRBP2.PA"
+    },
+    {
+        "nom": "LDC",
+        "symbole": "LOUP.PA"
+    },
+    {
+        "nom": "ROBERTET-CI",
+        "symbole": "CBE.PA"
+    },
+    {
+        "nom": "CRCAM-LANGUED-CCI",
+        "symbole": "CRLA.PA"
+    },
+    {
+        "nom": "METROPOLE-TV",
+        "symbole": "MMT.PA"
+    },
+    {
+        "nom": "INTERPARFUMS",
+        "symbole": "ITP.PA"
+    },
+    {
+        "nom": "VIRBAC",
+        "symbole": "VIRP.PA"
+    },
+    {
+        "nom": "LAGARDERE-S.C.A.",
+        "symbole": "MMB.PA"
+    },
+    {
+        "nom": "VICAT",
+        "symbole": "VCT.PA"
+    },
+    {
+        "nom": "NEXANS",
+        "symbole": "NEX.PA"
+    },
+    {
+        "nom": "TF1",
+        "symbole": "TFI.PA"
+    },
+    {
+        "nom": "LISI",
+        "symbole": "FII.PA"
+    },
+    {
+        "nom": "ARTOIS-NOM.",
+        "symbole": "ARTO.PA"
+    },
+    {
+        "nom": "CRCAM-ATL.VEND.CCI",
+        "symbole": "CRAV.PA"
+    },
+    {
+        "nom": "BURELLE",
+        "symbole": "BUR.PA"
+    },
+    {
+        "nom": "IPSOS",
+        "symbole": "IPS.PA"
+    },
+    {
+        "nom": "TRIGANO",
+        "symbole": "TRI.PA"
+    },
+    {
+        "nom": "CRCAM-SUD-R.A.CCI",
+        "symbole": "CRSU.PA"
+    },
+    {
+        "nom": "ALTAREIT",
+        "symbole": "AREIT.PA"
+    },
+    {
+        "nom": "STEF",
+        "symbole": "STF.PA"
+    },
+    {
+        "nom": "CRCAM-NORM.SEINE",
+        "symbole": "CCN.PA"
+    },
+    {
+        "nom": "CRCAM-ALP.PROV.CCI",
+        "symbole": "CRAP.PA"
+    },
+    {
+        "nom": "ELEC.STRASBOURG",
+        "symbole": "ELEC.PA"
+    },
+    {
+        "nom": "SAVENCIA",
+        "symbole": "SAVE.PA"
+    },
+    {
+        "nom": "CRCAM-LOIRE-HTE-L.",
+        "symbole": "CRLO.PA"
+    },
+    {
+        "nom": "CRCAM-TOURAINE-CCI",
+        "symbole": "CRTO.PA"
+    },
+    {
+        "nom": "ERAMET",
+        "symbole": "ERA.PA"
+    },
+    {
+        "nom": "OENEO",
+        "symbole": "SBT.PA"
+    },
+    {
+        "nom": "ALTAMIR",
+        "symbole": "LTA.PA"
+    },
+    {
+        "nom": "KAUFMAN-ET-BROAD",
+        "symbole": "KOF.PA"
+    },
+    {
+        "nom": "TFF-GROUP",
+        "symbole": "TFF.PA"
+    },
+    {
+        "nom": "BONDUELLE",
+        "symbole": "BON.PA"
+    },
+    {
+        "nom": "MANITOU-BF",
+        "symbole": "MTU.PA"
+    },
+    {
+        "nom": "GROUPE-CRIT",
+        "symbole": "CEN.PA"
+    },
+    {
+        "nom": "NEURONES",
+        "symbole": "NRO.PA"
+    },
+    {
+        "nom": "TOUR-EIFFEL",
+        "symbole": "EIFF.PA"
+    },
+    {
+        "nom": "BOIRON",
+        "symbole": "BOI.PA"
+    },
+    {
+        "nom": "CA-TOULOUSE-31-CCI",
+        "symbole": "CAT31.PA"
+    },
+    {
+        "nom": "QUADIENT",
+        "symbole": "QDT.PA"
+    },
+    {
+        "nom": "BENETEAU",
+        "symbole": "BEN.PA"
+    },
+    {
+        "nom": "CRCAM-ILLE-VIL.CCI",
+        "symbole": "CIV.PA"
+    },
+    {
+        "nom": "LECTRA",
+        "symbole": "LSS.PA"
+    },
+    {
+        "nom": "CRCAM-MORBIHAN-CCI",
+        "symbole": "CMO.PA"
+    },
+    {
+        "nom": "IMMOB.DASSAULT",
+        "symbole": "IMDA.PA"
+    },
+    {
+        "nom": "FIDUCIAL-REAL-EST.",
+        "symbole": "ORIA.PA"
+    },
+    {
+        "nom": "ALPES-(COMPAGNIE)",
+        "symbole": "CDA.PA"
+    },
+    {
+        "nom": "SYNERGIE",
+        "symbole": "SDG.PA"
+    },
+    {
+        "nom": "LAURENT-PERRIER",
+        "symbole": "LPE.PA"
+    },
+    {
+        "nom": "VALLOUREC",
+        "symbole": "VK.PA"
+    },
+    {
+        "nom": "SAMSE",
+        "symbole": "SAMS.PA"
+    },
+    {
+        "nom": "WAVESTONE",
+        "symbole": "WAVE.PA"
+    },
+    {
+        "nom": "NRJ-GROUP",
+        "symbole": "NRG.PA"
+    },
+    {
+        "nom": "THERMADOR-GROUPE",
+        "symbole": "THEP.PA"
+    },
+    {
+        "nom": "DERICHEBOURG",
+        "symbole": "DBG.PA"
+    },
+    {
+        "nom": "GUERBET",
+        "symbole": "GBT.PA"
+    },
+    {
+        "nom": "MERSEN",
+        "symbole": "MRN.PA"
+    },
+    {
+        "nom": "GL-EVENTS",
+        "symbole": "GLO.PA"
+    },
+    {
+        "nom": "ABC-ARBITRAGE",
+        "symbole": "ABCA.PA"
+    },
+    {
+        "nom": "CEGEDIM",
+        "symbole": "CGM.PA"
+    },
+    {
+        "nom": "GAUMONT",
+        "symbole": "GAM.PA"
+    },
+    {
+        "nom": "MAUREL-ET-PROM",
+        "symbole": "MAU.PA"
+    },
+    {
+        "nom": "ASSYSTEM",
+        "symbole": "ASY.PA"
+    },
+    {
+        "nom": "AKWEL",
+        "symbole": "AKW.PA"
+    },
+    {
+        "nom": "VIEL-ET-COMPAGNIE",
+        "symbole": "VIL.PA"
+    },
+    {
+        "nom": "MALTERIES-FCO-BEL.",
+        "symbole": "MALT.PA"
+    },
+    {
+        "nom": "AUBAY",
+        "symbole": "AUB.PA"
+    },
+    {
+        "nom": "FERM.CAS.MUN.CANNE",
+        "symbole": "FCMC.PA"
+    },
+    {
+        "nom": "BOURRELIER-GROUP",
+        "symbole": "ALBOU.PA"
+    },
+    {
+        "nom": "IDI",
+        "symbole": "IDIP.PA"
+    },
+    {
+        "nom": "SECHE-ENVIRONNEM.",
+        "symbole": "SCHP.PA"
+    },
+    {
+        "nom": "HOT.MAJESTIC-CANNE",
+        "symbole": "MLHMC.PA"
+    },
+    {
+        "nom": "PATRIMOINE-ET-COMM",
+        "symbole": "PAT.PA"
+    },
+    {
+        "nom": "GROUPE-GUILLIN",
+        "symbole": "ALGIL.PA"
+    },
+    {
+        "nom": "CHARGEURS",
+        "symbole": "CRI.PA"
+    },
+    {
+        "nom": "LATECOERE",
+        "symbole": "LAT.PA"
+    },
+    {
+        "nom": "EXEL-INDUSTRIES",
+        "symbole": "EXE.PA"
+    },
+    {
+        "nom": "INFOTEL",
+        "symbole": "INF.PA"
+    },
+    {
+        "nom": "JACQUET-METAL-SCE",
+        "symbole": "JCQ.PA"
+    },
+    {
+        "nom": "BASTIDE-LE-CONFORT",
+        "symbole": "BLC.PA"
+    },
+    {
+        "nom": "GROUPE-PARTOUCHE",
+        "symbole": "PARP.PA"
+    },
+    {
+        "nom": "ESSO",
+        "symbole": "ES.PA"
+    },
+    {
+        "nom": "BIGBEN-INTERACTIVE",
+        "symbole": "BIG.PA"
+    },
+    {
+        "nom": "PERRIER-(GERARD)",
+        "symbole": "PERR.PA"
+    },
+    {
+        "nom": "CLARANOVA",
+        "symbole": "CLA.PA"
+    },
+    {
+        "nom": "XILAM-ANIMATION",
+        "symbole": "XIL.PA"
+    },
+    {
+        "nom": "LANSON-BCC",
+        "symbole": "ALLAN.PA"
+    },
+    {
+        "nom": "LINEDATA-SERVICES",
+        "symbole": "LIN.PA"
+    },
+    {
+        "nom": "SOLOCAL-GROUP",
+        "symbole": "LOCAL.PA"
+    },
+    {
+        "nom": "VRANKEN-POMMERY",
+        "symbole": "VRAP.PA"
+    },
+    {
+        "nom": "EXPLOSIFS-PROD.CHI",
+        "symbole": "EXPL.PA"
+    },
+    {
+        "nom": "GEVELOT",
+        "symbole": "ALGEV.PA"
+    },
+    {
+        "nom": "PIERRE-VACANCES",
+        "symbole": "VAC.PA"
+    },
+    {
+        "nom": "LES-HOTELS-BAVEREZ",
+        "symbole": "ALLHB.PA"
+    },
+    {
+        "nom": "LUMIBIRD",
+        "symbole": "LBIRD.PA"
+    },
+    {
+        "nom": "JACQUES-BOGART",
+        "symbole": "JBOG.PA"
+    },
+    {
+        "nom": "CIE-DU-MONT-BLANC",
+        "symbole": "MLCMB.PA"
+    },
+    {
+        "nom": "GROUPE-SFPI",
+        "symbole": "SFPI.PA"
+    },
+    {
+        "nom": "GEA-GRENOBL.ELECT.",
+        "symbole": "GEA.PA"
+    },
+    {
+        "nom": "HAULOTTE-GROUP",
+        "symbole": "PIG.PA"
+    },
+    {
+        "nom": "GRAINES-VOLTZ",
+        "symbole": "GRVO.PA"
+    },
+    {
+        "nom": "SCBSM",
+        "symbole": "CBSM.PA"
+    },
+    {
+        "nom": "PISCINES-DESJOYAUX",
+        "symbole": "ALPDX.PA"
+    },
+    {
+        "nom": "PLAST.VAL-LOIRE",
+        "symbole": "PVL.PA"
+    },
+    {
+        "nom": "HIGH-CO",
+        "symbole": "HCO.PA"
+    },
+    {
+        "nom": "TRANSGENE",
+        "symbole": "TNG.PA"
+    },
+    {
+        "nom": "LACROIX-SA",
+        "symbole": "LACR.PA"
+    },
+    {
+        "nom": "GASCOGNE",
+        "symbole": "ALBI.PA"
+    },
+    {
+        "nom": "DAMARTEX",
+        "symbole": "ALDAR.PA"
+    },
+    {
+        "nom": "SAINT-JEAN-GROUPE",
+        "symbole": "SABE.PA"
+    },
+    {
+        "nom": "HERIGE",
+        "symbole": "ALHRG.PA"
+    },
+    {
+        "nom": "FONCIERE-VOLTA",
+        "symbole": "SPEL.PA"
+    },
+    {
+        "nom": "FIDUCIAL-OFF.SOL.",
+        "symbole": "SACI.PA"
+    },
+    {
+        "nom": "ACANTHE-DEV.",
+        "symbole": "ACAN.PA"
+    },
+    {
+        "nom": "GROUPE-LDLC",
+        "symbole": "ALLDL.PA"
+    },
+    {
+        "nom": "BOURSE-DIRECT",
+        "symbole": "BSD.PA"
+    },
+    {
+        "nom": "INDLE-FIN.ENTREPR.",
+        "symbole": "INFE.PA"
+    },
+    {
+        "nom": "ARTEA",
+        "symbole": "ARTE.PA"
+    },
+    {
+        "nom": "AUREA",
+        "symbole": "AURE.PA"
+    },
+    {
+        "nom": "POUJOULAT",
+        "symbole": "ALPJT.PA"
+    },
+    {
+        "nom": "ARTMARKET-COM",
+        "symbole": "PRC.PA"
+    },
+    {
+        "nom": "DOCK.PETR.AMBES-AM",
+        "symbole": "DPAM.PA"
+    },
+    {
+        "nom": "DELFINGEN",
+        "symbole": "ALDEL.PA"
+    },
+    {
+        "nom": "ST-DUPONT",
+        "symbole": "DPT.PA"
+    },
+    {
+        "nom": "MBWS",
+        "symbole": "MBWS.PA"
+    },
+    {
+        "nom": "FIPP",
+        "symbole": "FIPP.PA"
+    },
+    {
+        "nom": "NSC-GROUPE",
+        "symbole": "ALNSC.PA"
+    },
+    {
+        "nom": "MEDIA-6",
+        "symbole": "EDI.PA"
+    },
+    {
+        "nom": "GUILLEMOT",
+        "symbole": "GUI.PA"
+    },
+    {
+        "nom": "EUROFINS-CEREP",
+        "symbole": "ALECR.PA"
+    },
+    {
+        "nom": "TOUAX",
+        "symbole": "TOUP.PA"
+    },
+    {
+        "nom": "EAUX-DE-ROYAN",
+        "symbole": "MLEDR.PA"
+    },
+    {
+        "nom": "U10-CORP",
+        "symbole": "ALU10.PA"
+    },
+    {
+        "nom": "HOTELS-DE-PARIS",
+        "symbole": "HDP.PA"
+    },
+    {
+        "nom": "STRADIM-ESPAC.FIN",
+        "symbole": "ALSAS.PA"
+    },
+    {
+        "nom": "PASSAT",
+        "symbole": "PSAT.PA"
+    },
+    {
+        "nom": "PROACTIS-SA",
+        "symbole": "PROAC.PA"
+    },
+    {
+        "nom": "ADOMOS",
+        "symbole": "ALADO.PA"
+    },
+    {
+        "nom": "ENCRES-DUBUIT",
+        "symbole": "ALDUB.PA"
+    },
+    {
+        "nom": "EURASIA-FONC-INV",
+        "symbole": "EFI.PA"
+    },
+    {
+        "nom": "COHERIS",
+        "symbole": "COH.PA"
+    },
+    {
+        "nom": "MEMSCAP-REGPT",
+        "symbole": "MEMS.PA"
+    },
+    {
+        "nom": "COFIDUR",
+        "symbole": "ALCOF.PA"
+    },
+    {
+        "nom": "SOC-FRANC-CASINOS",
+        "symbole": "SFCA.PA"
+    },
+    {
+        "nom": "IMPRIMERIE-CHIRAT",
+        "symbole": "MLIMP.PA"
+    },
+    {
+        "nom": "SCHNEIDER-ELECTRIC",
+        "symbole": "SU.PA"
+    },
+    {
+        "nom": "CAC_40",
+        "symbole": "^FCHI"
+    },
+    {
+        "nom": "ArcelorMittal_S.A.",
+        "symbole": "MT"
+    },
+    {
+        "nom": "ALSTOM",
+        "symbole": "ALO.PA"
+    },
+    {
+        "nom": "LEGRAND",
+        "symbole": "LR.PA"
+    }
+]
