@@ -25,6 +25,11 @@ from simulation_dynamique import simuler_rendement_long3, simuler_rendement_rapi
 
 app = Flask(__name__)
 
+# ----------- ROUTE TEST -----------------
+@app.route("/")
+def home():
+    return "Flask fonctionne !"
+
 # ----------- ROUTE OPTIMISATION -----------------
 @app.route("/optimiser", methods=["POST"])
 def optimiser():
