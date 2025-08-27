@@ -107,7 +107,7 @@ def calculer_matrice_covariance3(symboles, start_date, end_date):
             matrice_covariance[j][i] = cov
     return matrice_covariance
 
-def calculer_risque_portefeuille(w, symboles, start_date, end_date):
+def calculer_risque_portefeuille3(w, symboles, start_date, end_date):
     w_transpose = np.transpose(w)
     matrice_covariance = calculer_matrice_covariance3(symboles, start_date, end_date)
     variance_portefeuille = np.dot(np.dot(w_transpose, matrice_covariance), w)

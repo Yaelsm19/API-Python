@@ -144,7 +144,7 @@ def sql_val(val):
     val = str(val).replace("'", "''")
     return f"'{val}'"
 
-def init_database() -> None:
+def init_database2() -> None:
     """Initialise la table actions si elle n'existe pas."""
     try:
         conn = mysql.connector.connect(**DB_CONFIG)
@@ -441,7 +441,7 @@ def ajouter_action_base_donnees2(nom: str, symbole: str) -> bool:
 
 def ajouter_action_complete2(nom: str, symbole: str, start_date: str, end_date: str, fichier_json: str = "euronext_nettoye.json") -> bool:
     try:
-        init_database()
+        init_database2()
     except Exception as e:
         print(f"echec de l'initialisation de la base de donnees : {e}")
         return False
