@@ -16,6 +16,11 @@ from flask import Flask, request, jsonify
 ######################################################################## Tout recuperer #########################################################################################
 #################################################################################################################################################################################
 #################################################################################################################################################################################
+
+
+# Télécharge les prix de clôture et les rendements journaliers pour toutes les actions listées dans le fichier JSON,
+# puis les enregistre sous forme de fichiers CSV dans le dossier 'historique_action'.
+
 def recuperer_prix_cloture2(start_date, end_date, json_file):
     with open(json_file, 'r', encoding='utf-8') as f:
         actions = json.load(f)
@@ -66,6 +71,7 @@ def recuperer_prix_cloture2(start_date, end_date, json_file):
         print("Actions en erreur :", erreurs_list)
 
 
+# Vérifie tous les fichiers CSV existants dans 'historique_action' et supprime ceux qui ne couvrent pas correctement la période spécifiée.
 
 def verifier_et_supprimer_fichiers_tout2(date_debut, date_actuelle):
     dossier = "historique_action"
@@ -102,7 +108,7 @@ def verifier_et_supprimer_fichiers_tout2(date_debut, date_actuelle):
             os.remove(chemin)
             supprimes += 1
 
-
+# Filtre le fichier JSON pour ne conserver que les actions pour lesquelles un fichier CSV existe dans le dossier spécifié.
 def filtrer_json_selon_csv2(json_file, dossier_csv):
     with open(json_file, 'r', encoding='utf-8') as f:
         actions = json.load(f)
@@ -120,7 +126,7 @@ def filtrer_json_selon_csv2(json_file, dossier_csv):
 
     print(f"{len(actions_filtrees)} actions gardees dans {json_file} selon les fichiers CSV.")
 
-
+# Prépare une valeur pour l'insertion SQL en gérant les chaînes, les valeurs NULL et l’échappement des apostrophes.
 def sql_val(val: Any) -> str:
     if val is None or val == "" or val == "NULL":
         return "NULL"
@@ -136,13 +142,7 @@ DB_CONFIG = {
     'password': '',
     'charset': 'utf8'
 }
-
-def sql_val(val):
-    """Prepare la valeur pour l'insertion SQL, gère NULL et echappement."""
-    if val is None:
-        return "NULL"
-    val = str(val).replace("'", "''")
-    return f"'{val}'"
+# Initialise la base de données MySQL et crée la table 'actions' si elle n'existe pas.
 
 def init_database2() -> None:
     """Initialise la table actions si elle n'existe pas."""
@@ -167,6 +167,9 @@ def init_database2() -> None:
     finally:
         cursor.close()
         conn.close()
+
+# Lit les actions depuis le fichier JSON, récupère les informations via Yahoo Finance,
+# et insère les données dans la table MySQL 'actions', en gérant les erreurs et les tentatives multiples.
 
 def enrichir_et_json_vers_sql2(json_file: str, max_retries: int = 3, delay: float = 0.1) -> None:
     """Charge les actions depuis JSON et les insère directement dans MySQL."""
@@ -236,19 +239,22 @@ def enrichir_et_json_vers_sql2(json_file: str, max_retries: int = 3, delay: floa
     conn.close()
     print(f"Termine : {insert_count} actions inserees dans la base.")
 
-
-
+ # Exécute automatiquement toutes les étapes : téléchargement des prix, nettoyage des CSV,
+# filtrage du JSON et insertion en base MySQL.
 def tout_faire2(start_date, end_date, json_file, sql_file, dossier_actions) :
     recuperer_prix_cloture2(start_date, end_date, json_file)
     verifier_et_supprimer_fichiers_tout2(start_date, end_date)
     filtrer_json_selon_csv2(json_file, dossier_actions)
     enrichir_et_json_vers_sql2(json_file)
+
 #################################################################################################################################################################################
 #################################################################################################################################################################################
 ######################################################################## Tout completer #########################################################################################
 #################################################################################################################################################################################
 #################################################################################################################################################################################
 
+# Complète les fichiers CSV existants pour chaque action jusqu'à la veille du jour actuel,
+# en téléchargeant uniquement les nouvelles données manquantes.
 def completer_prix_csv_aujourdhui2(json_file):
     """Complète tous les CSV existants pour chaque action jusqu'à aujourd'hui."""
     with open(json_file, 'r', encoding='utf-8') as f:
@@ -324,6 +330,9 @@ def completer_prix_csv_aujourdhui2(json_file):
 #################################################################################################################################################################################
 #################################################################################################################################################################################
 
+# Télécharge les prix de clôture et rendements pour une seule action,
+# et les enregistre dans un fichier CSV dédié dans 'historique_action'.
+
 def recuperer_prix_cloture_1_symbole2(start_date: str, end_date: str, nom: str, symbole: str) -> Optional[str]:
     os.makedirs('historique_action', exist_ok=True)
     nom_fichier = nom
@@ -345,6 +354,8 @@ def recuperer_prix_cloture_1_symbole2(start_date: str, end_date: str, nom: str, 
     except Exception as e:
         print(f"NON : Erreur lors du telechargement pour {symbole} : {e}")
         return 0
+
+# Vérifie un fichier CSV pour une action spécifique et le supprime s’il ne couvre pas correctement la période demandée.
 
 def verifier_et_supprimer_fichiers2(nom_fichier: str, start_date: str, end_date: str) -> int:
     date_min_ref = pd.to_datetime(start_date) + timedelta(days=10)
@@ -375,6 +386,8 @@ def verifier_et_supprimer_fichiers2(nom_fichier: str, start_date: str, end_date:
             os.remove(fichier)
         return 0
 
+# Ajoute une action (nom et symbole) au fichier JSON si elle n’y est pas déjà présente.
+
 def ajouter_symbole_json2(nom: str, symbole: str, fichier_json: str) -> bool:
     try:
         try:
@@ -404,6 +417,8 @@ def ajouter_symbole_json2(nom: str, symbole: str, fichier_json: str) -> bool:
     except Exception as e:
         print(f"Erreur lors de l'ajout a {fichier_json} : {e}")
         return False
+
+ # Récupère les informations d’une action via Yahoo Finance et l’insère dans la table MySQL 'actions'.
 
 def ajouter_action_base_donnees2(nom: str, symbole: str) -> bool:
 
@@ -438,6 +453,9 @@ def ajouter_action_base_donnees2(nom: str, symbole: str) -> bool:
     finally:
         cursor.close()
         conn.close()
+
+# Ajoute une action complète en automatisant toutes les étapes :
+# téléchargement des données historiques, vérification du CSV, ajout au JSON et insertion dans la base MySQL.
 
 def ajouter_action_complete2(nom: str, symbole: str, start_date: str, end_date: str, fichier_json: str = "euronext_nettoye.json") -> bool:
     try:

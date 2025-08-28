@@ -1,3 +1,7 @@
+# ----------- Importation des bibliothèques -----------------#
+
+
+
 from flask import Flask, request, jsonify
 from datetime import date, timedelta, datetime
 from zoneinfo import ZoneInfo
@@ -17,6 +21,10 @@ from matplotlib import pyplot as plt
 import pandas_market_calendars as mcal
 from sqlalchemy import null
 from flask import Flask, request, jsonify
+
+# ----------- Importation des fonctions-----------------#
+
+
 from optimisation_portefeuille import calculer_rentabilite1, calculer_matrice_rentabilite1, calculer_covariance1, calculer_ecart_type1, calculer_matrice_covariance1, calculer_risque_portefeuille1, calculer_co_semi_variance1, calculer_matrice_semi_variance1, calculer_semi_risque_portefeuille1, calculer_skewness_matrice1, calculer_kurtosis_matrice1, utilite_exponentielle1, gradient_utilite1, maximiser_ratio_sharpe1, maximiser_ratio_sortino1, optimiser_utilite_CARA1, process_une_action1, process_tout_action1
 from recuperer_donnes import recuperer_prix_cloture2, verifier_et_supprimer_fichiers_tout2, filtrer_json_selon_csv2, enrichir_et_json_vers_sql2, tout_faire2, completer_prix_csv_aujourdhui2, init_database2, recuperer_prix_cloture_1_symbole2, verifier_et_supprimer_fichiers2, ajouter_symbole_json2, ajouter_action_base_donnees2, ajouter_action_complete2
 from simulation_simple import simuler_rendement4, charger_donnees4, est_jour_boursier4, verifier_presence_date4, get_prix_cloture4, calculer_rentabilite_1_titre4, calculer_rentabilite_n_titres4
@@ -25,12 +33,14 @@ from simulation_dynamique import simuler_rendement_long3, simuler_rendement_rapi
 
 app = Flask(__name__)
 
-# ----------- ROUTE TEST -----------------
+# ----------- ROUTE TEST -----------------#
+# Route racine pour vérifier que Flask fonctionne
 @app.route("/")
 def home():
     return "Flask fonctionne !"
 
 # ----------- ROUTE OPTIMISATION -----------------
+# Route pour optimiser un portefeuille selon Sharpe, Sortino ou utilité CARA
 @app.route("/optimiser", methods=["POST"])
 def optimiser():
     try:
@@ -66,6 +76,7 @@ def optimiser():
         return jsonify({"erreur": str(e)}), 500
 
 # ----------- ROUTES RECUPERATION -----------------
+# Route pour récupérer toutes les actions et les insérer dans la base
 @app.route("/recuperer_tout", methods=["GET"])
 def recuperer_tout():
     date_debut = request.args.get("date_debut")
@@ -74,6 +85,7 @@ def recuperer_tout():
     tout_faire2(date_debut, date_actuelle, "../euronext_nettoye.json", "sql_file", "../fichier_python/historique_action")
     return jsonify({"message": "Récupération terminée", "date_debut": date_debut, "date_fin": str(date_actuelle)})
 
+# Route pour récupérer une seule action
 @app.route("/recuperer_un", methods=["GET"])
 def recuperer_un():
     date_debut = request.args.get("date_debut")
@@ -84,12 +96,14 @@ def recuperer_un():
     ajouter_action_complete2(nom_titre, symbole_titre, date_debut, date_actuelle)
     return jsonify({"message": f"Action {nom_titre} ({symbole_titre}) ajoutée", "date_debut": date_debut, "date_fin": str(date_actuelle)})
 
+# Route pour compléter tous les CSV avec les prix du jour
 @app.route("/completer_tout", methods=["GET"])
 def completer_tout():
     completer_prix_csv_aujourdhui2("../euronext_nettoye.json")
     return jsonify({"message": "Complétion terminée"})
 
 # ----------- ROUTE SIMULATION DYNAMIQUE -----------------
+# Route pour lancer une simulation dynamique (rolling window) avec différentes méthodes
 @app.route("/simulation_dynamique", methods=["GET"])
 def simulation_dynamique_api():
     try:
@@ -157,10 +171,9 @@ def simulation_dynamique_api():
 
     return jsonify(reponse)
 
-
 # ----------- ROUTE SIMULATION SIMPLE -----------------
+# Route pour lancer une simulation simple avec un portefeuille fixe
 @app.route("/simulation_simple", methods=["GET"])
-
 def simulation_simple_api():
     try:
         date_debut = datetime.strptime(request.args.get("date_debut"), "%Y-%m-%d")
@@ -185,9 +198,8 @@ def simulation_simple_api():
 
     return jsonify(reponse)
 
-
+# ----------- BOUCLE PRINCIPALE -----------------
+# Démarre l'application Flask sur le port défini dans l'environnement ou 8000
 if __name__ == "__main__":
     port = int(os.environ.get("PORT", 8000))
     app.run(host="0.0.0.0", port=port, debug=True)
-
-
