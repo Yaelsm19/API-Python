@@ -10,6 +10,8 @@ from datetime import date, timedelta, datetime
 import numpy as np
 from scipy.optimize import minimize
 from sqlalchemy import null
+import io
+import base64
 
 from flask import Flask, request, jsonify
 
@@ -704,12 +706,12 @@ def simuler_rendement_long3(start_date, end_date, duree_estimation, duree_invest
     plt.legend()
     plt.tight_layout()
 
-    dossier = "image/graphique"
-    os.makedirs(dossier, exist_ok=True)
-    nom_fichier = f"simulationdyn_rendement_{user_id}_{nom_simulation}.png"
-    chemin_fichier = os.path.join(dossier, nom_fichier)
-    plt.savefig(chemin_fichier, dpi=300)
+    buf = io.BytesIO()
+    plt.savefig(buf, format='png', dpi=300)
     plt.close()
+    buf.seek(0)
+
+    image_b64 = base64.b64encode(buf.read()).decode('utf-8')
 
     return {
         "rentabilite_portefeuille_absolue": rentabilite_portefeuille_absolue / 100,
@@ -724,7 +726,8 @@ def simuler_rendement_long3(start_date, end_date, duree_estimation, duree_invest
         "valeur_minimum_indice": valeur_minimum_indice,
         "valeur_maximum_indice": valeur_maximum_indice,
         "premiere_date": premiere_date.strftime('%Y-%m-%d'),
-        "derniere_date": derniere_date.strftime('%Y-%m-%d')
+        "derniere_date": derniere_date.strftime('%Y-%m-%d'),
+        "image_b64": image_b64
     }
 
 #################################################################################################################################################################################
@@ -857,12 +860,13 @@ def simuler_rendement_rapide3(start_date, end_date, duree_estimation, duree_inve
     plt.legend()
     plt.tight_layout()
     
-    dossier = "image/graphique"
-    os.makedirs(dossier, exist_ok=True)
-    nom_fichier = f"simulationdyn_rendement_{user_id}_{nom_simulation}.png"
-    chemin_fichier = os.path.join(dossier, nom_fichier)
-    plt.savefig(chemin_fichier, dpi=300)
+    buf = io.BytesIO()
+    plt.savefig(buf, format='png', dpi=300)
     plt.close()
+    buf.seek(0)
+
+    image_b64 = base64.b64encode(buf.read()).decode('utf-8')
+
     
     return {
         "rentabilite_portefeuille_absolue": rentabilite_portefeuille_absolue/100,
@@ -878,7 +882,8 @@ def simuler_rendement_rapide3(start_date, end_date, duree_estimation, duree_inve
         "valeur_maximum_indice": valeur_maximum_indice,
         "nombre_jours_boursiers": len(df_portefeuille_total),
         "premiere_date": premiere_date.strftime('%Y-%m-%d'), 
-        "derniere_date": derniere_date.strftime('%Y-%m-%d')
+        "derniere_date": derniere_date.strftime('%Y-%m-%d'),
+        "image_b64": image_b64
     }
 
 #################################################################################################################################################################################

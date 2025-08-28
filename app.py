@@ -21,7 +21,8 @@ from matplotlib import pyplot as plt
 import pandas_market_calendars as mcal
 from sqlalchemy import null
 from flask import Flask, request, jsonify
-
+import io
+import base64
 # ----------- Importation des fonctions-----------------#
 
 
