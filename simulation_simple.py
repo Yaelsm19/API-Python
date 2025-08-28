@@ -7,7 +7,8 @@ import os
 import sys
 import json
 from flask import Flask, request, jsonify
-
+import io
+import base64
 
 #################################################################################################################################################################################
 #################################################################################################################################################################################
@@ -202,12 +203,12 @@ def simuler_rendement4(start_date, end_date, montant, poids_symboles, symboles, 
     plt.legend()
     plt.tight_layout()
 
-    dossier = "image/graphique"
-    os.makedirs(dossier, exist_ok=True)
-    nom_fichier = f"simulation_rendement_{user_id}_{nom_simulation}.png"
-    chemin_fichier = os.path.join(dossier, nom_fichier)
-    plt.savefig(chemin_fichier, dpi=300)
+    buf = io.BytesIO()
+    plt.savefig(buf, format='png', dpi=300)
     plt.close()
+    buf.seek(0)
+
+    image_b64 = base64.b64encode(buf.read()).decode('utf-8')
 
     return {
         "rentabilite_portefeuille_absolue": rentabilite_portefeuille_absolue/100,
@@ -221,6 +222,7 @@ def simuler_rendement4(start_date, end_date, montant, poids_symboles, symboles, 
         "valeur_maximum_portefeuille": valeur_maximum_portefeuille,
         "valeur_minimum_indice": valeur_minimum_indice,
         "valeur_maximum_indice": valeur_maximum_indice,
+        "image_b64": image_b64,
     }
 
 #################################################################################################################################################################################
