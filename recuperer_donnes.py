@@ -479,3 +479,4 @@ def ajouter_action_complete2(nom: str, symbole: str, start_date: str, end_date: 
     print(f"Action {nom} ({symbole}) ajoutee avec succès (JSON, base de donnees, donnees historiques).")
     return True
 
+completer_prix_csv_aujourdhui2('euronext_nettoye.json')
