@@ -18,8 +18,7 @@ from flask import Flask, request, jsonify
 #################################################################################################################################################################################
 
 
-# Télécharge les prix de clôture et les rendements journaliers pour toutes les actions listées dans le fichier JSON,
-# puis les enregistre sous forme de fichiers CSV dans le dossier 'historique_action'.
+# Télécharge les prix de clôture et les rendements journaliers pour toutes les actions listées dans le fichier JSON, puis les enregistre sous forme de fichiers CSV dans le dossier 'historique_action'.
 
 def recuperer_prix_cloture2(start_date, end_date, json_file):
     with open(json_file, 'r', encoding='utf-8') as f:
@@ -239,8 +238,7 @@ def enrichir_et_json_vers_sql2(json_file: str, max_retries: int = 3, delay: floa
     conn.close()
     print(f"Termine : {insert_count} actions inserees dans la base.")
 
- # Exécute automatiquement toutes les étapes : téléchargement des prix, nettoyage des CSV,
-# filtrage du JSON et insertion en base MySQL.
+ # Exécute automatiquement toutes les étapes : téléchargement des prix, nettoyage des CSV, filtrage du JSON et insertion en base MySQL.
 def tout_faire2(start_date, end_date, json_file, sql_file, dossier_actions) :
     recuperer_prix_cloture2(start_date, end_date, json_file)
     verifier_et_supprimer_fichiers_tout2(start_date, end_date)
@@ -249,12 +247,11 @@ def tout_faire2(start_date, end_date, json_file, sql_file, dossier_actions) :
 
 #################################################################################################################################################################################
 #################################################################################################################################################################################
-######################################################################## Tout completer #########################################################################################
+######################################################################## Récupérer les données de tout les symboles depuis Yahoo Finance ########################################
 #################################################################################################################################################################################
 #################################################################################################################################################################################
 
-# Complète les fichiers CSV existants pour chaque action jusqu'à la veille du jour actuel,
-# en téléchargeant uniquement les nouvelles données manquantes.
+# Complète les fichiers CSV existants pour chaque action jusqu'à la veille du jour actuel, en téléchargeant uniquement les nouvelles données manquantes.
 def completer_prix_csv_aujourdhui2(json_file):
     """Complète tous les CSV existants pour chaque action jusqu'à aujourd'hui."""
     with open(json_file, 'r', encoding='utf-8') as f:
@@ -326,12 +323,11 @@ def completer_prix_csv_aujourdhui2(json_file):
 
 #################################################################################################################################################################################
 #################################################################################################################################################################################
-######################################################################## Recuperer un symbole ###################################################################################
+######################################################################## Récupérer les données d’un seul symbole depuis Yahoo Finance ###########################################
 #################################################################################################################################################################################
 #################################################################################################################################################################################
 
-# Télécharge les prix de clôture et rendements pour une seule action,
-# et les enregistre dans un fichier CSV dédié dans 'historique_action'.
+# Télécharge les prix de clôture et rendements pour une seule action, et les enregistre dans un fichier CSV dédié dans 'historique_action'.
 
 def recuperer_prix_cloture_1_symbole2(start_date: str, end_date: str, nom: str, symbole: str) -> Optional[str]:
     os.makedirs('historique_action', exist_ok=True)
@@ -454,8 +450,7 @@ def ajouter_action_base_donnees2(nom: str, symbole: str) -> bool:
         cursor.close()
         conn.close()
 
-# Ajoute une action complète en automatisant toutes les étapes :
-# téléchargement des données historiques, vérification du CSV, ajout au JSON et insertion dans la base MySQL.
+# Ajoute une action complète en automatisant toutes les étapes : téléchargement des données historiques, vérification du CSV, ajout au JSON et insertion dans la base MySQL.
 
 def ajouter_action_complete2(nom: str, symbole: str, start_date: str, end_date: str, fichier_json: str = "euronext_nettoye.json") -> bool:
     try:

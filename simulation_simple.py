@@ -16,7 +16,7 @@ import base64
 #################################################################################################################################################################################
 #################################################################################################################################################################################
 
-#Charge les fichiers CSV des cours de clôture pour une liste de symboles et retourne un dictionnaire de DataFrames.
+# Charge les fichiers CSV des cours de clôture pour une liste de symboles et retourne un dictionnaire de DataFrames.
 
 def charger_donnees4(symboles):
     donnees = {}
@@ -38,13 +38,13 @@ def charger_donnees4(symboles):
 #################################################################################################################################################################################
 #################################################################################################################################################################################
 
-#Vérifie si une date donnée est un jour de bourse sur le marché XPAR.
+# Vérifie si une date donnée est un jour de bourse sur le marché XPAR.
 
 def est_jour_boursier4(date):
     cal = mcal.get_calendar('XPAR')
     return cal.valid_days(start_date=date, end_date=date).size > 0
 
-#Vérifie que tous les symboles ont des données disponibles pour une date donnée dans le dictionnaire de DataFrames.
+# Vérifie que tous les symboles ont des données disponibles pour une date donnée dans le dictionnaire de DataFrames.
 
 def verifier_presence_date4(symboles, date_str, donnees_symboles):
     date = pd.to_datetime(date_str)
@@ -65,7 +65,7 @@ def verifier_presence_date4(symboles, date_str, donnees_symboles):
 #################################################################################################################################################################################
 #################################################################################################################################################################################
 
-#Récupère le prix de clôture d’un symbole pour une date donnée à partir des données chargées.
+# Récupère le prix de clôture d’un symbole pour une date donnée à partir des données chargées.
 
 def get_prix_cloture4(symbole, date_str, donnees_symboles):
     try:
@@ -86,7 +86,7 @@ def get_prix_cloture4(symbole, date_str, donnees_symboles):
 #################################################################################################################################################################################
 #################################################################################################################################################################################
 
-#Calcule la rentabilité d’un seul titre entre deux dates à partir des prix de clôture. Retourne 0 si les prix sont manquants
+# Calcule la rentabilité d’un seul titre entre deux dates à partir des prix de clôture.
 
 def calculer_rentabilite_1_titre4(symbole, start_date, end_date, donnees_symboles) :
     prix_debut = get_prix_cloture4(symbole, start_date, donnees_symboles)
@@ -97,7 +97,7 @@ def calculer_rentabilite_1_titre4(symbole, start_date, end_date, donnees_symbole
     return rentabilite
 
 
-#Calcule la rentabilité pondérée d’un portefeuille de plusieurs titres entre deux dates, en utilisant les poids fournis pour chaque titre.
+# Calcule la rentabilité pondérée d’un portefeuille de plusieurs titres entre deux dates, en utilisant les poids fournis pour chaque titre.
 def calculer_rentabilite_n_titres4(poids, symboles, start_date, end_date, donnees_symboles) :
     rentabilite_total = 0
     for i in range(len(symboles)) :
@@ -224,9 +224,3 @@ def simuler_rendement4(start_date, end_date, montant, poids_symboles, symboles, 
         "valeur_maximum_indice": valeur_maximum_indice,
         "image_b64": image_b64,
     }
-
-#################################################################################################################################################################################
-#################################################################################################################################################################################
-######################################################### Traitement des arguments ##############################################################################################
-#################################################################################################################################################################################
-#################################################################################################################################################################################

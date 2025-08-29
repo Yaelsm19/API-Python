@@ -23,8 +23,8 @@ from flask import Flask, request, jsonify
 #################################################################################################################################################################################
 #################################################################################################################################################################################
 
-# Calcule la rentabilité moyenne d'une action sur une période donnée
-# à partir du fichier CSV historique de ses cours de clôture.
+# Calcule la rentabilité moyenne d'une action sur une période donnée à partir du fichier CSV historique de ses cours de clôture.
+
 def calculer_rentabilite3(symbole, start_date, end_date):
     df = pd.read_csv(
         f"historique_action/{symbole}_cloture.csv",
@@ -44,8 +44,8 @@ def calculer_rentabilite3(symbole, start_date, end_date):
     moyenne_rentabilite = df_periode['Rentabilite_Journaliere'].mean()
     return moyenne_rentabilite
 
- # Calcule un vecteur contenant la rentabilité moyenne de chaque action
-# de la liste fournie pour la période spécifiée.
+ # Calcule un vecteur contenant la rentabilité moyenne de chaque titres de la liste fournie pour la période spécifiée.
+
 def calculer_matrice_rentabilite3(symboles, start_date, end_date):
     rentabilites = []
     for s in symboles:
@@ -62,8 +62,8 @@ def calculer_matrice_rentabilite3(symboles, start_date, end_date):
 #################################################################################################################################################################################
 #################################################################################################################################################################################
 
-# Calcule la covariance entre les rendements journaliers de deux actions
-# sur la période spécifiée. Si les deux symboles sont identiques, renvoie la variance.
+# Calcule la covariance entre les rendements journaliers de deux titres sur la période spécifiée. Si les deux symboles sont identiques, renvoie la variance.
+
 def calculer_covariance3(symbole1, symbole2, start_date, end_date):
     df1 = pd.read_csv(
         rf"historique_action/{symbole1}_cloture.csv",
@@ -106,8 +106,7 @@ def calculer_covariance3(symbole1, symbole2, start_date, end_date):
 
 
 
-# Construit la matrice de covariance pour toutes les actions de la liste
-# en appelant calculer_covariance3 pour chaque paire.
+# Construit la matrice de covariance pour toutes les actions de la liste en appelant calculer_covariance3 pour chaque paire.
 
 def calculer_matrice_covariance3(symboles, start_date, end_date):
     n = len(symboles)
@@ -119,8 +118,7 @@ def calculer_matrice_covariance3(symboles, start_date, end_date):
             matrice_covariance[j][i] = cov
     return matrice_covariance
 
-# Calcule le risque (écart-type) d'un portefeuille donné par les poids w
-# et la liste de symboles, en utilisant la matrice de covariance.
+# Calcule le risque (écart-type) d'un portefeuille donné par les poids w et la liste de symboles sur une période donnée.
 
 def calculer_risque_portefeuille3(w, symboles, start_date, end_date):
     w_transpose = np.transpose(w)
@@ -134,7 +132,7 @@ def calculer_risque_portefeuille3(w, symboles, start_date, end_date):
 #################################################################################################################################################################################
 #################################################################################################################################################################################
 
-#Calcule la co-semi-variance entre deux symboles par rapport à un taux benchmark sur une période donnée
+# Calcule la co-semi-variance entre deux symboles par rapport à un taux benchmark sur une période donnée.
 
 def calculer_co_semi_variance3(symbole1, symbole2, start_date, end_date, taux_benchmark):
     taux_benchmark_journalier = (1+taux_benchmark)**(1/365)-1
@@ -196,7 +194,7 @@ def calculer_co_semi_variance3(symbole1, symbole2, start_date, end_date, taux_be
 
 
 
-#Crée la matrice de co-semi-variance pour plusieurs symboles.
+#Crée la matrice de co-semi-variance pour plusieurs symboles sur une période donnée et par rapport à un taux benchmark.
 
 def calculer_matrice_semi_variance3(symboles, start_date, end_date, taux_benchmark):
     n = len(symboles)
@@ -209,7 +207,7 @@ def calculer_matrice_semi_variance3(symboles, start_date, end_date, taux_benchma
     return matrice_covariance
 
     
-#Calcule le semi-risque (écart-type de semi-variance) d’un portefeuille
+# Calcule le semi-risque (écart-type de semi-variance) d’un ensemble de poids w et une liste de symboles sur une période donnée et par rapport à un taux benchmark.
 
 def calculer_semi_risque_portefeuille3(w, symboles, start_date, end_date, taux_benchmark):
     w_transpose = np.transpose(w)
@@ -224,7 +222,7 @@ def calculer_semi_risque_portefeuille3(w, symboles, start_date, end_date, taux_b
 #################################################################################################################################################################################
 
 
-#Crée la matrice coskewness pour plusieurs symboles sur une période.
+# Crée la matrice de coskewness pour plusieurs symboles sur une période donnée.
 
 def calculer_skewness_matrice3(symboles, start_date, end_date):
     donnees = []
@@ -267,7 +265,7 @@ def calculer_skewness_matrice3(symboles, start_date, end_date):
 #################################################################################################################################################################################
 
 
-#Crée la matrice cokurtosis pour plusieurs symboles sur une période.
+# Crée la matrice de cokurtosis pour plusieurs symboles sur une période donnée.
 
 def calculer_kurtosis_matrice3(symboles, start_date, end_date):
     donnees = []
@@ -306,7 +304,7 @@ def calculer_kurtosis_matrice3(symboles, start_date, end_date):
 #################################################################################################################################################################################
 #################################################################################################################################################################################
 
-#Optimise les poids pour maximiser le ratio de Sharpe.
+# Optimise les poids pour maximiser le ratio de Sharpe d'un ensemble de titres, sur une période donnée et par rapport à un taux de référence.
 
 def maximiser_ratio_sharpe3(symboles, start_date, end_date, taux_benchmark):
     taux_benchmark_journalier = (1 + taux_benchmark)**(1/365) - 1
@@ -365,7 +363,7 @@ def maximiser_ratio_sharpe3(symboles, start_date, end_date, taux_benchmark):
 #################################################################################################################################################################################
 #################################################################################################################################################################################
 
-#Optimise les poids pour maximiser le ratio de Sortino.
+# Optimise les poids pour maximiser le ratio de Sortino pour un ensemble de titres, sur une période donnée et par rapport à un taux de référence.
 
 def maximiser_ratio_sortino3(symboles, start_date, end_date, taux_benchmark):
     taux_benchmark_journalier = ( 1 + taux_benchmark)**(1/365)-1
@@ -418,7 +416,7 @@ def maximiser_ratio_sortino3(symboles, start_date, end_date, taux_benchmark):
 #################################################################################################################################################################################
 #################################################################################################################################################################################
 
-#Calcule le gradient de l’utilité exponentielle ajustée par moments jusqu’au kurtosis.
+# Calcule le gradient de l’utilité exponentielle ajustée pour des poids donnés et un lambda donné en utilisant les matrices de rentabilité, de covariance, de skewness et de kurtosis.
 
 def gradient_utilite3(w, lambd, matrice_rentabilite, matrice_covariance, matrice_skewness, matrice_kurtosis):
     n = len(w)
@@ -439,7 +437,7 @@ def gradient_utilite3(w, lambd, matrice_rentabilite, matrice_covariance, matrice
     
     return grad_U
 
-#Calcule la valeur de l’utilité exponentielle ajustée par moments.
+# Calcule la valeur de l’utilité exponentielle ajustée pour des poids donnés et un lambda donné en utilisant les matrices de rentabilité, de covariance, de skewness et de kurtosis.
 
 def utilite_exponentielle3(w, lambd, matrice_rentabilite, matrice_covariance, matrice_skewness, matrice_kurtosis):
     E_w = np.dot(w.T, matrice_rentabilite)
@@ -453,7 +451,7 @@ def utilite_exponentielle3(w, lambd, matrice_rentabilite, matrice_covariance, ma
 
 
 
-#Optimise les poids pour maximiser l’utilité exponentielle d’un portefeuille.
+# Optimise les poids pour maximiser l’utilité exponentielle d’un ensemble d'actif pour un lambda donné et sur une période donnée.
 
 def optimiser_utilite_CARA3(symboles, start_date, end_date, lambd):
     matrice_rentabilite = calculer_matrice_rentabilite3(symboles, start_date, end_date).flatten()
@@ -480,12 +478,12 @@ def optimiser_utilite_CARA3(symboles, start_date, end_date, lambd):
 
 #################################################################################################################################################################################
 #################################################################################################################################################################################
-######################################################### Récupération des données pour tout les titres #########################################################################
+######################################################### Récupération des données ##############################################################################################
 #################################################################################################################################################################################
 #################################################################################################################################################################################
 
 
-#Charge les fichiers CSV des cours de clôture pour tous les symboles.
+# Charge les fichiers CSV des cours de clôture pour tous les symboles.
 
 def charger_donnees3(symboles):
     donnees = {}
@@ -503,17 +501,17 @@ def charger_donnees3(symboles):
 
 #################################################################################################################################################################################
 #################################################################################################################################################################################
-######################################################### Vérification de la disponibilité des dates ################################################################################
+######################################################### Vérification de la disponibilité des dates ############################################################################
 #################################################################################################################################################################################
 #################################################################################################################################################################################
 
-#Vérifie si une date est un jour de bourse.
+# Vérifie si une date est un jour de bourse.
 
 def est_jour_boursier3(date):
     cal = mcal.get_calendar('XPAR')
     return cal.valid_days(start_date=date, end_date=date).size > 0
 
-#Vérifie si toutes les données sont disponibles pour une date donnée.
+# Vérifie si toutes les données des titres sont disponibles pour une date donnée.
 
 def verifier_presence_date3(symboles, date_str, donnees_symboles):
     date = pd.to_datetime(date_str)
@@ -535,7 +533,7 @@ def verifier_presence_date3(symboles, date_str, donnees_symboles):
 #################################################################################################################################################################################
 
 
-#Récupère le prix de clôture d’un symbole à une date donnée.
+# Récupère le prix de clôture d’un symbole à une date donnée.
 
 def get_prix_cloture3(symbole, date_str, donnees_symboles):
     try:
@@ -557,7 +555,7 @@ def get_prix_cloture3(symbole, date_str, donnees_symboles):
 #################################################################################################################################################################################
 
 
-#Calcule la rentabilité d’un symbole entre deux dates.
+# Calcule la rentabilité d’un symbole entre deux dates.
 
 def calculer_rentabilite_1_titre3(symbole, start_date, end_date, donnees_symboles) :
     prix_debut = get_prix_cloture3(symbole, start_date, donnees_symboles)
@@ -582,7 +580,8 @@ def calculer_rentabilite_n_titres3(poids, symboles, start_date, end_date, donnee
 #################################################################################################################################################################################
 
 
-#Simule l’évolution d’un portefeuille sur une période donnée, en rééquilibrant selon la méthode choisie (Sharpe, Sortino, ou utilité exponentielle), et calcule les performances, drawdowns et valeurs maximales/minimales, tout en générant un graphique.
+# Simule l’évolution d’un portefeuille sur une période donnée, en rééquilibrant selon la méthode choisie (Sharpe, Sortino, ou utilité exponentielle), et calcule les performances, drawdowns et valeurs maximales/minimales, tout en générant un graphique.
+
 def simuler_rendement_long3(start_date, end_date, duree_estimation, duree_investissement, symboles, poids_risque, indice, montant, taux_sans_risque, taux_benchmark, user_id, nom_simulation, methode, lamb):
     titres = [indice] + symboles
     donnees_titres = charger_donnees3(titres)
@@ -736,7 +735,7 @@ def simuler_rendement_long3(start_date, end_date, duree_estimation, duree_invest
 #################################################################################################################################################################################
 #################################################################################################################################################################################
 
-#imule l’évolution d’un portefeuille sur une période donnée en utilisant un rééquilibrage par période (plutôt que quotidien), calcule les performances, drawdowns et valeurs extrêmes, et génère un graphique comparant le portefeuille à l’indice.
+# Simule l’évolution d’un portefeuille sur une période donnée, en rééquilibrant selon la méthode choisie (Sharpe, Sortino, ou utilité exponentielle), et calcule les performances, drawdowns et valeurs maximales/minimales, tout en générant un graphique par période afin de prendre moins de temps.
 
 def simuler_rendement_rapide3(start_date, end_date, duree_estimation, duree_investissement, symboles, poids_risque, indice, montant, taux_sans_risque, taux_benchmark, user_id, nom_simulation, methode,lamb):
     titres = [indice] + symboles
@@ -885,9 +884,3 @@ def simuler_rendement_rapide3(start_date, end_date, duree_estimation, duree_inve
         "derniere_date": derniere_date.strftime('%Y-%m-%d'),
         "image_b64": image_b64
     }
-
-#################################################################################################################################################################################
-#################################################################################################################################################################################
-######################################################### Traitement des arguments ##############################################################################################
-#################################################################################################################################################################################
-#################################################################################################################################################################################

@@ -116,7 +116,7 @@ def calculer_matrice_covariance1(symboles, start_date, end_date):
     return matrice_covariance
 
 
-# Calcule le risque du portefeuille à partir des poids des titres et de la période considérée.
+# Calcule le risque du portefeuille (écart-type) à partir des poids des titres et de la période considérée.
 
 def calculer_risque_portefeuille1(w, symboles, start_date, end_date):
     w_transpose = np.transpose(w)
@@ -203,7 +203,7 @@ def calculer_matrice_semi_variance1(symboles, start_date, end_date, taux_benchma
     return matrice_covariance
 
 
-# Calcule le downside risk (semi-écart-type) d'un portefeuille donné avec ses poids et un taux de référence.
+# Calcule le risque (semi-écart-type) d'un portefeuille donné avec ses poids et un taux de référence sur une période donnée.
 
 def calculer_semi_risque_portefeuille1(w, symboles, start_date, end_date, taux_benchmark):
     w_transpose = np.transpose(w)
@@ -307,7 +307,7 @@ def process_une_action1(symbole, start_date, end_date):
     ecart_type = calculer_ecart_type1(symbole, start_date, end_date)
     return (rentabilite, ecart_type)
 
-# Calcule la rentabilité et l'écart-type pour une liste d'actifs et retourne les résultats sous forme de DataFrame.
+# Calcule la rentabilité et l'écart-type pour une liste d'actifs sur une période donnée et retourne les résultats sous forme de DataFrame.
 
 def process_tout_action1(symboles, start_date, end_date):
     data = []
@@ -324,7 +324,7 @@ def process_tout_action1(symboles, start_date, end_date):
 #################################################################################################################################################################################
 
 
-# Calcule les poids optimaux pour maximiser le ratio de Sharpe d'un portefeuille donné.
+# Calcule les poids optimaux pour maximiser le ratio de Sharpe sur un ensemble de titres, une période donnée et par rapport à un taux de référence (souvent taux sans risque)
 
 
 def maximiser_ratio_sharpe1(symboles, start_date, end_date, taux_benchmark):
@@ -376,7 +376,7 @@ def maximiser_ratio_sharpe1(symboles, start_date, end_date, taux_benchmark):
 #################################################################################################################################################################################
 
 
-# Calcule les poids optimaux pour maximiser le ratio de Sortino d'un portefeuille donné.
+# Calcule les poids optimaux pour maximiser le ratio de Sortino sur un ensemble de titres, une période donnée et par rapport à un taux de référence.
 
 def maximiser_ratio_sortino1(symboles, start_date, end_date, taux_benchmark):
     taux_benchmark_journalier = (1+taux_benchmark)**(1/365)-1
@@ -438,7 +438,7 @@ def maximiser_ratio_sortino1(symboles, start_date, end_date, taux_benchmark):
 #################################################################################################################################################################################
 
 
-# Calcule le gradient de la fonction d'utilité exponentielle CARA pour un portefeuille donné en utilisant la moyenne, la covariance, le skewness et le kurtosis.
+# Calcule le gradient de la fonction d'utilité exponentielle CARA sur un ensemble de poids et avec un lambda donné en utilisant les matrices de moyenne, covariance, skewness et kurtosis.
 
 def gradient_utilite1(w, lambd, matrice_rentabilite, matrice_covariance, matrice_skewness, matrice_kurtosis):
     n = len(w)
@@ -459,7 +459,7 @@ def gradient_utilite1(w, lambd, matrice_rentabilite, matrice_covariance, matrice
     
     return grad_U
 
-# Calcule la valeur de la fonction d'utilité exponentielle CARA pour un portefeuille donné en utilisant la moyenne, la covariance, le skewness et le kurtosis.
+# Calcule la valeur de la fonction d'utilité exponentielle CARA pour un enseble de poids et un lambda donné en utilisant les matrices de moyenne, de covariance, de skewness et de kurtosis.
 
 def utilite_exponentielle1(w, lambd, matrice_rentabilite, matrice_covariance, matrice_skewness, matrice_kurtosis):
     E_w = np.dot(w.T, matrice_rentabilite)
@@ -472,7 +472,7 @@ def utilite_exponentielle1(w, lambd, matrice_rentabilite, matrice_covariance, ma
     return -utilite
 
 
-# Optimise les poids du portefeuille pour maximiser la fonction d'utilité exponentielle CARA sous contraintes de budget et bornes sur les poids.
+# Optimise les poids du portefeuille pour maximiser la fonction d'utilité exponentielle CARA pour un ensemble de titres, sur une période donnée et pour un lambda donné.
 
 def optimiser_utilite_CARA1(symboles, start_date, end_date, lambd):
     matrice_rentabilite = calculer_matrice_rentabilite1(symboles, start_date, end_date).flatten()
@@ -506,9 +506,3 @@ def optimiser_utilite_CARA1(symboles, start_date, end_date, lambd):
         return df_optimisation, df_portefeuille
         
     raise ValueError("Optimisation échouée : " + resultat.message)
-
-#################################################################################################################################################################################
-#################################################################################################################################################################################
-####################################################################### traitement des arguments ################################################################################
-#################################################################################################################################################################################
-#################################################################################################################################################################################

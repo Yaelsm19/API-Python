@@ -23,6 +23,8 @@ from sqlalchemy import null
 from flask import Flask, request, jsonify
 import io
 import base64
+from flask import Response
+import signal
 # ----------- Importation des fonctions-----------------#
 
 
@@ -32,7 +34,39 @@ from simulation_simple import simuler_rendement4, charger_donnees4, est_jour_bou
 from simulation_dynamique import simuler_rendement_long3, simuler_rendement_rapide3, maximiser_ratio_sharpe3, maximiser_ratio_sortino3, optimiser_utilite_CARA3, calculer_rentabilite3, calculer_matrice_rentabilite3, calculer_covariance3, calculer_matrice_covariance3, calculer_risque_portefeuille3, calculer_co_semi_variance3, calculer_matrice_semi_variance3, calculer_semi_risque_portefeuille3, calculer_skewness_matrice3, calculer_kurtosis_matrice3, utilite_exponentielle3, gradient_utilite3, charger_donnees3, est_jour_boursier3, verifier_presence_date3, get_prix_cloture3, calculer_rentabilite_1_titre3, calculer_rentabilite_n_titres3
 
 
+
+
+
+
+
 app = Flask(__name__)
+
+# ----------- GESTION DE TIMEOUT -----------------#
+
+class TimeoutException(Exception):
+    pass
+
+def timeout_handler(signum, frame):
+    raise TimeoutException("Temps d'exécution dépassé")
+
+@app.before_request
+def before_request():
+    signal.signal(signal.SIGALRM, timeout_handler)
+    signal.alarm(100)
+
+@app.after_request
+def after_request(response):
+    signal.alarm(0)
+    return response
+
+@app.errorhandler(TimeoutException)
+def handle_timeout(error):
+    return jsonify({"error": "Temps d'exécution dépassé"}), 504
+
+
+
+
+
 
 # ----------- ROUTE TEST -----------------#
 # Route racine pour vérifier que Flask fonctionne
