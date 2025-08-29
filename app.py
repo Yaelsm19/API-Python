@@ -24,7 +24,7 @@ from flask import Flask, request, jsonify
 import io
 import base64
 from flask import Response
-import signal
+from concurrent.futures import ThreadPoolExecutor, TimeoutError
 # ----------- Importation des fonctions-----------------#
 
 
@@ -42,8 +42,6 @@ from simulation_dynamique import simuler_rendement_long3, simuler_rendement_rapi
 app = Flask(__name__)
 
 # ----------- GESTION DE TIMEOUT -----------------#
-
-from concurrent.futures import ThreadPoolExecutor, TimeoutError
 
 executor = ThreadPoolExecutor(max_workers=4)
 
