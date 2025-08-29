@@ -50,7 +50,7 @@ executor = ThreadPoolExecutor(max_workers=4)
 def run_with_timeout(func, *args, timeout=100, **kwargs):
     future = executor.submit(func, *args, **kwargs)
     try:
-        return future.result(timeout=timeout)  # ⏱️ timeout en secondes
+        return future.result(timeout=timeout)
     except TimeoutError:
         raise Exception("Temps d'exécution dépassé")
 
