@@ -47,7 +47,7 @@ from concurrent.futures import ThreadPoolExecutor, TimeoutError
 
 executor = ThreadPoolExecutor(max_workers=4)
 
-def run_with_timeout(func, *args, timeout=100, **kwargs):
+def run_with_timeout(func, *args, timeout=300, **kwargs):
     future = executor.submit(func, *args, **kwargs)
     try:
         return future.result(timeout=timeout)  # ⏱️ timeout en secondes
