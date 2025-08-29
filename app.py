@@ -43,28 +43,16 @@ app = Flask(__name__)
 
 # ----------- GESTION DE TIMEOUT -----------------#
 
-class TimeoutException(Exception):
-    pass
+from concurrent.futures import ThreadPoolExecutor, TimeoutError
 
-def timeout_handler(signum, frame):
-    raise TimeoutException("Temps d'exécution dépassé")
+executor = ThreadPoolExecutor(max_workers=4)
 
-@app.before_request
-def before_request():
-    signal.signal(signal.SIGALRM, timeout_handler)
-    signal.alarm(100)
-
-@app.after_request
-def after_request(response):
-    signal.alarm(0)
-    return response
-
-@app.errorhandler(TimeoutException)
-def handle_timeout(error):
-    return jsonify({"error": "Temps d'exécution dépassé"}), 504
-
-
-
+def run_with_timeout(func, *args, timeout=100, **kwargs):
+    future = executor.submit(func, *args, **kwargs)
+    try:
+        return future.result(timeout=timeout)  # ⏱️ timeout en secondes
+    except TimeoutError:
+        raise Exception("Temps d'exécution dépassé")
 
 
 
@@ -90,14 +78,14 @@ def optimiser():
             return jsonify({"erreur": "Méthode non reconnue."}), 400
 
         if methode == "sharpe":
-            df_optimisation, df_portefeuille = maximiser_ratio_sharpe1(titres, date_debut, date_fin, taux_benchmark)
+            df_optimisation, df_portefeuille = run_with_timeout(maximiser_ratio_sharpe1, titres, date_debut, date_fin, taux_benchmark)
         elif methode == "moment_ordre_superieur":
             lamb = float(data.get("lambda"))
-            df_optimisation, df_portefeuille = optimiser_utilite_CARA1(titres, date_debut, date_fin, lamb)
+            df_optimisation, df_portefeuille = run_with_timeout(optimiser_utilite_CARA1, titres, date_debut, date_fin, lamb)
         else:
-            df_optimisation, df_portefeuille = maximiser_ratio_sortino1(titres, date_debut, date_fin, taux_benchmark)
+            df_optimisation, df_portefeuille = run_with_timeout(maximiser_ratio_sortino1, titres, date_debut, date_fin, taux_benchmark)
 
-        df_process = process_tout_action1(titres, date_debut, date_fin)
+        df_process = run_with_timeout(process_tout_action1, titres, date_debut, date_fin)
 
         reponse = {
             "optimisation": df_optimisation.to_dict(orient="records"),
@@ -117,7 +105,7 @@ def recuperer_tout():
     date_debut = request.args.get("date_debut")
     tz_paris = ZoneInfo("Europe/Paris")
     date_actuelle = datetime.now(tz_paris).date()
-    tout_faire2(date_debut, date_actuelle, "../euronext_nettoye.json", "sql_file", "../fichier_python/historique_action")
+    run_with_timeout(tout_faire2, date_debut, date_actuelle, "../euronext_nettoye.json", "sql_file", "../fichier_python/historique_action")
     return jsonify({"message": "Récupération terminée", "date_debut": date_debut, "date_fin": str(date_actuelle)})
 
 # Route pour récupérer une seule action
@@ -128,13 +116,13 @@ def recuperer_un():
     symbole_titre = request.args.get("symbole_titre")
     tz_paris = ZoneInfo("Europe/Paris")
     date_actuelle = datetime.now(tz_paris).date()
-    ajouter_action_complete2(nom_titre, symbole_titre, date_debut, date_actuelle)
+    run_with_timeout(ajouter_action_complete2, nom_titre, symbole_titre, date_debut, date_actuelle)
     return jsonify({"message": f"Action {nom_titre} ({symbole_titre}) ajoutée", "date_debut": date_debut, "date_fin": str(date_actuelle)})
 
 # Route pour compléter tous les CSV avec les prix du jour
 @app.route("/completer_tout", methods=["GET"])
 def completer_tout():
-    completer_prix_csv_aujourdhui2("../euronext_nettoye.json")
+    run_with_timeout(completer_prix_csv_aujourdhui2, "euronext_nettoye.json")
     return jsonify({"message": "Complétion terminée"})
 
 # ----------- ROUTE SIMULATION DYNAMIQUE -----------------
@@ -168,12 +156,12 @@ def simulation_dynamique_api():
     try:
         if methode == "sharpe":
             if graphique_option == "rapide":
-                reponse = simuler_rendement_rapide3(date_debut, date_fin, duree_estimation,
+                reponse = run_with_timeout(simuler_rendement_rapide3, date_debut, date_fin, duree_estimation,
                                                     duree_investissement, titres, niveau_risque,
                                                     indice, montant, taux_sans_risque_annuel,
                                                     taux_benchmark, user_id, nom_simulation, methode, None)
             else:
-                reponse = simuler_rendement_long3(date_debut, date_fin, duree_estimation,
+                reponse = run_with_timeout(simuler_rendement_long3, date_debut, date_fin, duree_estimation,
                                                  duree_investissement, titres, niveau_risque,
                                                  indice, montant, taux_sans_risque_annuel,
                                                  taux_benchmark, user_id, nom_simulation, methode, None)
@@ -181,23 +169,23 @@ def simulation_dynamique_api():
             if lamb is None:
                 return jsonify({"error": "Le paramètre lambda est requis pour la méthode 'moment_ordre_superieur'"}), 400
             if graphique_option == "rapide":
-                reponse = simuler_rendement_rapide3(date_debut, date_fin, duree_estimation,
+                reponse = run_with_timeout(simuler_rendement_rapide3, date_debut, date_fin, duree_estimation,
                                                     duree_investissement, titres, niveau_risque,
                                                     indice, montant, taux_sans_risque_annuel,
                                                     taux_benchmark, user_id, nom_simulation, methode, lamb)
             else:
-                reponse = simuler_rendement_long3(date_debut, date_fin, duree_estimation,
+                reponse = run_with_timeout(simuler_rendement_long3, date_debut, date_fin, duree_estimation,
                                                  duree_investissement, titres, niveau_risque,
                                                  indice, montant, taux_sans_risque_annuel,
                                                  taux_benchmark, user_id, nom_simulation, methode, lamb)
         else: 
             if graphique_option == "rapide":
-                reponse = simuler_rendement_rapide3(date_debut, date_fin, duree_estimation,
+                reponse = run_with_timeout(simuler_rendement_rapide3, date_debut, date_fin, duree_estimation,
                                                     duree_investissement, titres, niveau_risque,
                                                     indice, montant, taux_sans_risque_annuel,
                                                     taux_benchmark, user_id, nom_simulation, methode, None)
             else:
-                reponse = simuler_rendement_long3(date_debut, date_fin, duree_estimation,
+                reponse = run_with_timeout(simuler_rendement_long3, date_debut, date_fin, duree_estimation,
                                                  duree_investissement, titres, niveau_risque,
                                                  indice, montant, taux_sans_risque_annuel,
                                                  taux_benchmark, user_id, nom_simulation, methode, None)
@@ -226,7 +214,7 @@ def simulation_simple_api():
 
         w_liste = [float(p.strip())/100 for p in w.split(',')]
 
-        reponse = simuler_rendement4(date_debut, date_fin, montant, w_liste, titres, poids_str, taux_sans_risque, indice, user_id, nom_simulation)
+        reponse = run_with_timeout(simuler_rendement4, date_debut, date_fin, montant, w_liste, titres, poids_str, taux_sans_risque, indice, user_id, nom_simulation)
 
     except Exception as e:
         return jsonify({"error": f"Paramètres invalides ou erreur: {str(e)}"}), 400
